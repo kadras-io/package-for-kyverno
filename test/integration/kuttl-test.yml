@@ -1,0 +1,12 @@
+apiVersion: kuttl.dev/v1beta1
+kind: TestSuite
+testDirs:
+- ./test/integration
+manifestDirs:
+- ./test/setup/assets
+parallel: 1
+startKIND: true
+kindContext: integration
+kindNodeCache: true
+timeout: 120
+artifactsDir: /tmp/kuttl-artifacts

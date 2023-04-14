@@ -1,0 +1,13 @@
+apiVersion: vendir.k14s.io/v1alpha1
+directories:
+- contents:
+  - githubRelease:
+      disableAutoChecksumValidation: true
+      slug: kyverno/kyverno
+      tag: v1.9.2
+    includePaths:
+    - install.yaml
+    path: .
+  path: upstream
+kind: Config
+minimumRequiredVersion: 0.32.0

@@ -5,5 +5,5 @@ directories:
       tag: v1.9.2
       url: https://api.github.com/repos/kyverno/kyverno/releases/96431508
     path: .
-  path: upstream
+  path: config/upstream
 kind: LockConfig

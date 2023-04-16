@@ -8,6 +8,6 @@ directories:
     includePaths:
     - install.yaml
     path: .
-  path: upstream
+  path: config/upstream
 kind: Config
 minimumRequiredVersion: 0.32.0

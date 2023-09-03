@@ -1,0 +1,18 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@ if/end data.values.tracing.enabled:
+
+#@overlay/match by=overlay.subset({"kind":"Deployment"}), expects="1+"
+---
+spec:
+  template:
+    spec:
+      containers:
+        #@overlay/match by=overlay.all, expects=1
+        - args:
+          - --enableTracing
+          - #@ "--tracingAddress={}".format(data.values.tracing.endpoint)
+          - #@ "--tracingPort={}".format(data.values.tracing.port)
+          #@ if/end data.values.tracing.ca_cert_secret != "":
+          - #@ "--tracingCreds={}".format(data.values.tracing.ca_cert_secret)

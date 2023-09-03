@@ -1,0 +1,46 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#! List of Kyverno Deployments interacting with OCI registries.
+#@ deployments = ["kyverno-admission-controller", "kyverno-background-controller", "kyverno-reports-controller"]
+
+#@ if data.values.ca_cert_data != "":
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kyverno-certs
+  namespace: kyverno
+stringData:
+  #@yaml/text-templated-strings
+  ca-certificates: |
+    (@= data.values.ca_cert_data @)
+
+#@ for deployment in deployments:
+
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":deployment}}), expects="1+"
+---
+spec:
+  template:
+    spec:
+      containers:
+        #@overlay/match by=overlay.all, expects=1
+        - 
+          #@overlay/match missing_ok=True
+          volumeMounts:
+            - name: ca-certificates
+              mountPath: /etc/ssl/certs/ca-certificates.crt
+              subPath: ca-certificates.crt
+      #@overlay/match missing_ok=True
+      volumes:
+        - name: ca-certificates
+          secret:
+            secretName: kyverno-certs
+            items:
+            - key: ca-certificates
+              path: ca-certificates.crt
+
+#@ end
+
+#@ end

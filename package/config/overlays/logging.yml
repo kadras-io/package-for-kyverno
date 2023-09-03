@@ -1,0 +1,15 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind":"Deployment"}), expects="1+"
+---
+spec:
+  template:
+    spec:
+      containers:
+        #@overlay/match by=overlay.all, expects=1
+        - args:
+          #@overlay/match by=overlay.subset("--loggingFormat=text")
+          - #@ "--loggingFormat={}".format(data.values.logging.encoding)
+          #@overlay/match by=overlay.subset("--v=2")
+          - #@ "--v={}".format(data.values.logging.level)

@@ -133,7 +133,7 @@ Settings for tracing.
 | `tracing.enabled` | `false` | Whether to configure Kyverno to export OpenTelemetry traces to a distributed tracing backend. |
 | `tracing.endpoint` | `""` | The endpoint where the distributed tracing backend accepts OpenTelemetry traces. For example, `opentelemetrycollector.kyverno.svc.cluster.local`. |
 | `tracing.port` | `4317` | The port exposed by the distributed tracing backend to accept OpenTelemetry traces. |
-| `tracing.ca_cert_secret` | `4317` | The Secret containing the certificate which is used by the Opentelemetry Tracing Client. If empty string is set, an insecure connection will be used. |
+| `tracing.ca_cert_secret` | `""` | The Secret containing the certificate which is used by the Opentelemetry Tracing Client. If empty string is set, an insecure connection will be used. |
 
 Settings for the corporate proxy.
 

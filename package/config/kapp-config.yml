@@ -8,12 +8,12 @@ minimumRequiredVersion: 0.50.0
 #! See more about the resource merge method: https://carvel.dev/kapp/docs/latest/merge-method.
 rebaseRules:
 
-#! This webhook configuration is populated by Kyverno.
-#! We want to persist those changes between upgrades.
+#! This configuration is populated by Kyverno at deploy-time.
+#! We want to persist those changes between upgrades
+#! if it's not defined in the provided manifests.
 - paths:
   - [spec, conversion, strategy]
-  - [status]
   type: copy
-  sources: [existing]
+  sources: [new, existing]
   resourceMatchers:
   - apiVersionKindMatcher: {apiVersion: apiextensions.k8s.io/v1, kind: CustomResourceDefinition}

@@ -1,0 +1,18 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind":"ConfigMap", "metadata":{"name":"kyverno"}})
+#@overlay/match-child-defaults missing_ok=True
+---
+data:
+  webhooks: |
+    - namespaceSelector:
+        matchExpressions:
+          - key: kubernetes.io/metadata.name
+            operator: NotIn
+            values:
+              - kyverno
+  webhookAnnotations: |
+    # On AKS, we disable the Admissions Enforcer so that it doesn't interfere with the webhooks included in this package.
+    # See: https://learn.microsoft.com/en-us/azure/aks/faq#can-admission-controller-webhooks-impact-kube-system-and-internal-aks-namespaces
+    admissions.enforcer/disabled: "true"

@@ -1,0 +1,20 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@ if/end not data.values.optional_components.background_controller:
+
+#@overlay/remove
+#@overlay/match by=overlay.subset({"metadata":{"labels":{"app.kubernetes.io/component": "background-controller"}}}), expects="1+"
+---
+
+#@ if/end not data.values.optional_components.cleanup_controller:
+
+#@overlay/remove
+#@overlay/match by=overlay.subset({"metadata":{"labels":{"app.kubernetes.io/component": "cleanup-controller"}}}), expects="1+"
+---
+
+#@ if/end not data.values.optional_components.reports_controller:
+
+#@overlay/remove
+#@overlay/match by=overlay.subset({"metadata":{"labels":{"app.kubernetes.io/component": "reports-controller"}}}), expects="1+"
+---

@@ -1,0 +1,27 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":"kyverno-reports-controller"}})
+---
+spec:
+  #@overlay/match missing_ok=True
+  replicas: #@ data.values.reports_controller.replicas
+
+#@ if/end data.values.reports_controller.replicas > 1:
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kyverno-reports-controller-pdb
+  namespace: kyverno
+  labels:
+    app.kubernetes.io/component: reports-controller
+    app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/part-of: kyverno
+spec:
+  minAvailable: 50%
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: reports-controller
+      app.kubernetes.io/instance: kyverno
+      app.kubernetes.io/part-of: kyverno

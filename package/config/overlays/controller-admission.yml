@@ -1,0 +1,37 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":"kyverno-admission-controller"}})
+---
+spec:
+  #@overlay/match missing_ok=True
+  replicas: #@ data.values.admission_controller.replicas
+  template:
+    spec:
+      initContainers:
+        #@overlay/match by="name"
+        - name: kyverno-pre
+          args:
+          #@overlay/match by=overlay.subset("--loggingFormat=text")
+          - #@ "--loggingFormat={}".format(data.values.logging.encoding)
+          #@overlay/match by=overlay.subset("--v=2")
+          - #@ "--v={}".format(data.values.logging.level)
+
+#@ if/end data.values.admission_controller.replicas >= 3:
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kyverno-admission-controller-pdb
+  namespace: kyverno
+  labels:
+    app.kubernetes.io/component: admission-controller
+    app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/part-of: kyverno
+spec:
+  minAvailable: 50%
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: admission-controller
+      app.kubernetes.io/instance: kyverno
+      app.kubernetes.io/part-of: kyverno

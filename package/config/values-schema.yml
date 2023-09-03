@@ -1,0 +1,81 @@
+#@data/values-schema
+---
+
+#@schema/desc "Settings for which Kyverno optional components to deploy."
+optional_components:
+  #@schema/desc "Whether to deploy the Background Controller, responsible for processing of generate and mutate-existing rules."
+  background_controller: true
+  #@schema/desc "Whether to deploy the Cleanup Controller, responsible for processing `CleanupPolicy` resources."
+  cleanup_controller: true
+  #@schema/desc "Whether to deploy the Reports Controller, responsible for handling `PolicyReport` resources."
+  reports_controller: true
+
+#@schema/desc "PEM-encoded certificate data to trust TLS connections with a custom CA."
+ca_cert_data: ""
+
+#@schema/desc "Settings for the Admission Controller component."
+admission_controller:
+  #@schema/desc "The number of replicas for the Admission Controller. In order to enable high availability, it should be at least 3 (2 is not permitted)."
+  #@schema/validation min=1
+  replicas: 1
+
+#@schema/desc "Settings for the Background Controller component."
+background_controller:
+  #@schema/desc "The number of replicas for the Background Controller. In order to enable high availability, it should be greater than 1."
+  #@schema/validation min=1
+  replicas: 1
+
+#@schema/desc "Settings for the Cleanup Controller component."
+cleanup_controller:
+  #@schema/desc "The number of replicas for the Cleanup Controller. In order to enable high availability, it should be greater than 1."
+  #@schema/validation min=1
+  replicas: 1
+
+#@schema/desc "Settings for the Reports Controller component."
+reports_controller:
+  #@schema/desc "The number of replicas for the Reports Controller. In order to enable high availability, it should be greater than 1."
+  #@schema/validation min=1
+  replicas: 1
+
+#@schema/desc "Settings for logging."
+logging:
+  #@schema/desc "Number of the log level verbosity (from `1` to `6`)."
+  #@schema/validation min=1,max=6
+  level: 2
+  #@schema/desc "Log encoding format. Options: `text`, `json`."
+  #@schema/validation one_of=["text", "json"]
+  encoding: text
+
+#@schema/desc "Settings for metrics via Prometheus or OpenTelemetry."
+metrics:
+  #@schema/desc "Whether to use OpenTelemetry (`grpc`) or Prometheus (`prometheus`) for exporting metrics."
+  #@schema/validation one_of=["grpc", "prometheus"]
+  type: prometheus
+  #@schema/desc "The endpoint where the OpenTelemetry-based collector receives telemetry data."
+  #@schema/example ("The service endpoint of the OpenTelemetry-based collector", "opentelemetrycollector.kyverno.svc.cluster.local:4317")
+  #@schema/validation min_len=2, when=lambda _, ctx: ctx.parent["type"] == "grpc"
+  collector: ""
+
+#@schema/desc "Settings for tracing via OpenTelemetry."
+tracing:
+  #@schema/desc "Whether to configure Kyverno to export OpenTelemetry traces to a distributed tracing backend."
+  enabled: false
+  #@schema/desc "The endpoint where the distributed tracing backend accepts OpenTelemetry traces."
+  #@schema/example ("The service endpoint of the OpenTelemetry Collector", "opentelemetrycollector.kyverno.svc.cluster.local")
+  #@schema/validation min_len=2, when=lambda _, ctx: ctx.parent["enabled"]
+  endpoint: ""
+  #@schema/desc "The port exposed by the distributed tracing backend to accept OpenTelemetry traces."
+  #@schema/validation min=80, when=lambda _, ctx: ctx.parent["enabled"]
+  port: 4317
+  #@schema/desc "The Secret containing the certificate which is used by the Opentelemetry Tracing Client. If empty string is set, an insecure connection will be used."
+  ca_cert_secret: ""
+
+#@schema/desc "Settings for the corporate proxy."
+proxy:
+  #@schema/desc "The HTTPS proxy to use for network traffic."
+  https_proxy: ""
+  #@schema/desc "The HTTP proxy to use for network traffic."
+  http_proxy: ""
+  #@schema/desc "A comma-separated list of hostnames, IP addresses, or IP ranges in CIDR format that should not use the proxy."
+  #@schema/example ("Allow Kyverno controllers to talk to each other", ".cluster.local.,.cluster.local,.svc")
+  no_proxy: ""

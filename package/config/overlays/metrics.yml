@@ -1,0 +1,52 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@ metrics_services = ["kyverno-svc-metrics", "kyverno-background-controller-metrics", "kyverno-cleanup-controller-metrics", "kyverno-reports-controller-metrics"]
+
+#@overlay/match by=overlay.subset({"kind":"Deployment"}), expects="1+"
+---
+spec:
+  template:
+    spec:
+      containers:
+        #@overlay/match by=overlay.all, expects=1
+        - args:
+          #@overlay/match by=overlay.subset("--otelConfig=prometheus")
+          - #@ "--otelConfig={}".format(data.values.metrics.type)
+          #@ if/end data.values.metrics.collector != "":
+          - #@ "--otelCollector={}".format(data.values.metrics.collector)
+
+#! If Prometheus is chosen as the format for the metrics,
+#! add annotations to let Prometheus scrape metrics from Kyverno.
+
+#@ if data.values.metrics.type == "prometheus":
+
+#@ for metric_service in metrics_services:
+
+#@overlay/match by=overlay.subset({"kind":"Service", "metadata":{"name":metric_service}}), expects="1+"
+---
+#@overlay/match-child-defaults missing_ok=True
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/scheme: "http"
+    prometheus.io/port: "metrics-port"
+
+#@ end
+
+#@ end
+
+#! If OpenTelemetry/gRPC is chosen as the format for the metrics,
+#! remove the Services only used when exposing Prometheus metrics.
+
+#@ if data.values.metrics.type == "grpc":
+
+#@ for metric_service in metrics_services:
+
+#@overlay/remove
+#@overlay/match by=overlay.subset({"kind":"Service", "metadata":{"name":metric_service}}), expects="1+"
+---
+
+#@ end
+
+#@ end

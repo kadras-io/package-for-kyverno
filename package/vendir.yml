@@ -4,7 +4,7 @@ directories:
   - githubRelease:
       disableAutoChecksumValidation: true
       slug: kyverno/kyverno
-      tag: v1.10.3
+      tag: v1.10.4
     includePaths:
     - install.yaml
     path: .

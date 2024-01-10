@@ -12,7 +12,7 @@ A Carvel package for [Kyverno](https://kyverno.io), a policy engine designed for
 
 ### Prerequisites
 
-* Kubernetes 1.26+
+* Kubernetes 1.27+
 * Carvel [`kctrl`](https://carvel.dev/kapp-controller/docs/latest/install/#installing-kapp-controller-cli-kctrl) CLI.
 * Carvel [kapp-controller](https://carvel.dev/kapp-controller) deployed in your Kubernetes cluster. You can install it with Carvel [`kapp`](https://carvel.dev/kapp/docs/latest/install) (recommended choice) or `kubectl`.
 

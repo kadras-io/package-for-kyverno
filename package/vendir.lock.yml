@@ -2,8 +2,8 @@ apiVersion: vendir.k14s.io/v1alpha1
 directories:
 - contents:
   - githubRelease:
-      tag: v1.12.6
-      url: https://api.github.com/repos/kyverno/kyverno/releases/177243757
+      tag: v1.13.0
+      url: https://api.github.com/repos/kyverno/kyverno/releases/182419983
     path: .
   path: config/upstream
 kind: LockConfig

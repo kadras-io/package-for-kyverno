@@ -4,7 +4,7 @@
 ![Release Workflow](https://github.com/kadras-io/package-for-kyverno/actions/workflows/release.yml/badge.svg)
 [![The SLSA Level 3 badge](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev/spec/v1.0/levels)
 [![The Apache 2.0 license badge](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Follow us on Twitter](https://img.shields.io/static/v1?label=Twitter&message=Follow&color=1DA1F2)](https://twitter.com/kadrasIO)
+[![Follow us on Bluesky](https://img.shields.io/static/v1?label=Bluesky&message=Follow&color=1DA1F2)](https://bsky.app/profile/kadras.bsky.social)
 
 A Carvel package for [Kyverno](https://kyverno.io), a policy engine designed for Kubernetes. It can validate, mutate, and generate configurations using admission controls and background scans.
 

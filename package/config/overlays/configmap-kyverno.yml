@@ -12,7 +12,3 @@ data:
             operator: NotIn
             values:
               - kyverno
-  webhookAnnotations: |
-    # On AKS, we disable the Admissions Enforcer so that it doesn't interfere with the webhooks included in this package.
-    # See: https://learn.microsoft.com/en-us/azure/aks/faq#can-admission-controller-webhooks-impact-kube-system-and-internal-aks-namespaces
-    admissions.enforcer/disabled: "true"

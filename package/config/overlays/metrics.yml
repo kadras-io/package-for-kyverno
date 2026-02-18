@@ -19,7 +19,7 @@ spec:
 #! If Prometheus is chosen as the format for the metrics,
 #! add annotations to let Prometheus scrape metrics from Kyverno.
 
-#@ if data.values.metrics.type == "prometheus":
+#@ if data.values.metrics.type == "prometheus" and data.values.metrics.annotations:
 
 #@ for metric_service in metrics_services:
 

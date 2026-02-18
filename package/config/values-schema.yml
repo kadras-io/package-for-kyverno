@@ -51,6 +51,8 @@ metrics:
   #@schema/desc "Whether to use OpenTelemetry (`grpc`) or Prometheus (`prometheus`) for exporting metrics."
   #@schema/validation one_of=["grpc", "prometheus"]
   type: prometheus
+  #@schema/desc "Whether to add Prometheus scrape annotations to Kyverno's metrics Services when Prometheus is chosen as the metrics format."
+  annotations: true
   #@schema/desc "The endpoint where the OpenTelemetry-based collector receives telemetry data."
   #@schema/example ("The service endpoint of the OpenTelemetry-based collector", "opentelemetrycollector.kyverno.svc.cluster.local:4317")
   #@schema/validation min_len=2, when=lambda _, ctx: ctx.parent["type"] == "grpc"

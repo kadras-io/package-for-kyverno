@@ -124,6 +124,7 @@ Settings for metrics.
 | Config | Default | Description |
 |-------|-------------------|-------------|
 | `metrics.type` | `prometheus` | Whether to use OpenTelemetry (`grpc`) or Prometheus (`prometheus`) for exporting metrics. |
+| `metrics.annotations` | `true` | Whether to add Prometheus scrape annotations to Kyverno's metrics Services when Prometheus is chosen as the metrics format. |
 | `metrics.collector` | `""` | The endpoint where the OpenTelemetry-based collector receives telemetry data. For example, `opentelemetrycollector.kyverno.svc.cluster.local:4317`. |
 
 Settings for tracing.

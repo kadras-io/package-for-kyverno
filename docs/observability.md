@@ -43,4 +43,4 @@ For more information, check the Kyverno documentation for [traces](https://kyver
 
 ## Dashboards
 
-If you use the Grafana observability stack, you can refer to this [dashboard](https://kyverno.io/docs/monitoring/bonus-grafana-dashboard/) as a foundation to build your own.
+If you use the Grafana observability stack, you can refer to this [dashboard](https://kyverno.io/docs/guides/monitoring/#grafana-dashboard) as a foundation to build your own.

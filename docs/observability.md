@@ -23,7 +23,9 @@ If you want to export metrics based on the OpenTelemetry format rather than Prom
 ```yaml
 metrics:
   type: grpc
-  collector: opentelemetrycollector.kyverno.svc.cluster.local:4317
+  collector: 
+    endpoint: opentelemetrycollector.kyverno.svc.cluster.local
+    port: 4317
 ```
 
 For more information, check the Kyverno documentation for [metrics](https://kyverno.io/docs/monitoring/).

@@ -13,8 +13,11 @@ spec:
         - args:
           #@overlay/match by=overlay.subset("--otelConfig=prometheus")
           - #@ "--otelConfig={}".format(data.values.metrics.type)
-          #@ if/end data.values.metrics.collector != "":
-          - #@ "--otelCollector={}".format(data.values.metrics.collector)
+          #@ if/end data.values.metrics.type == "grpc":
+          #@overlay/match by=overlay.subset("--metricsPort=8000")
+          - #@ "--metricsPort={}".format(data.values.metrics.collector.port)
+          #@ if/end data.values.metrics.collector.endpoint != "":
+          - #@ "--otelCollector={}".format(data.values.metrics.collector.endpoint)
 
 #! If Prometheus is chosen as the format for the metrics,
 #! add annotations to let Prometheus scrape metrics from Kyverno.

@@ -1,7 +1,6 @@
 apiVersion: kctrl.carvel.dev/v1alpha1
 kind: PackageBuild
 metadata:
-  creationTimestamp: null
   name: kyverno.packages.kadras.io
 spec:
   release:

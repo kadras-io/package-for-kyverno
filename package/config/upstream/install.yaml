@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -16,8 +16,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 automountServiceAccountToken: false
 ---
 apiVersion: v1
@@ -28,8 +29,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 automountServiceAccountToken: false
 ---
 apiVersion: v1
@@ -40,8 +42,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 automountServiceAccountToken: false
 ---
 apiVersion: v1
@@ -52,8 +55,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 automountServiceAccountToken: false
 ---
 apiVersion: v1
@@ -65,7 +69,7 @@ metadata:
     app.kubernetes.io/component: config
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     helm.sh/resource-policy: "keep"
 data:
@@ -191,7 +195,7 @@ metadata:
     app.kubernetes.io/component: config
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 data:
   namespaces: "{\"exclude\":[],\"include\":[]}"
   metricsExposure: "{\"kyverno_admission_requests_total\":{\"disabledLabelDimensions\":[\"resource_namespace\"]},\"kyverno_admission_review_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\"]},\"kyverno_cleanup_controller_deletedobjects_total\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"policy_namespace\"]},\"kyverno_generating_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]},\"kyverno_image_validating_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]},\"kyverno_mutating_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]},\"kyverno_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]},\"kyverno_policy_results_total\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"policy_namespace\"]},\"kyverno_policy_rule_info_total\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"policy_namespace\"]},\"kyverno_validating_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]}}"
@@ -204,7 +208,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: cleanuppolicies.kyverno.io
@@ -516,7 +520,8 @@ spec:
                             secrets:
                               description: |-
                                 Secrets specifies a list of secrets that are provided for credentials.
-                                Secrets must live in the Kyverno namespace.
+                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                imagePullSecrets from the resource namespace are also used.
                               items:
                                 type: string
                               type: array
@@ -1809,7 +1814,8 @@ spec:
                             secrets:
                               description: |-
                                 Secrets specifies a list of secrets that are provided for credentials.
-                                Secrets must live in the Kyverno namespace.
+                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                imagePullSecrets from the resource namespace are also used.
                               items:
                                 type: string
                               type: array
@@ -2814,7 +2820,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: clustercleanuppolicies.kyverno.io
@@ -3126,7 +3132,8 @@ spec:
                             secrets:
                               description: |-
                                 Secrets specifies a list of secrets that are provided for credentials.
-                                Secrets must live in the Kyverno namespace.
+                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                imagePullSecrets from the resource namespace are also used.
                               items:
                                 type: string
                               type: array
@@ -4419,7 +4426,8 @@ spec:
                             secrets:
                               description: |-
                                 Secrets specifies a list of secrets that are provided for credentials.
-                                Secrets must live in the Kyverno namespace.
+                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                imagePullSecrets from the resource namespace are also used.
                               items:
                                 type: string
                               type: array
@@ -5424,7 +5432,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: clusterpolicies.kyverno.io
@@ -5773,7 +5781,8 @@ spec:
                                   secrets:
                                     description: |-
                                       Secrets specifies a list of secrets that are provided for credentials.
-                                      Secrets must live in the Kyverno namespace.
+                                      Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                      imagePullSecrets from the resource namespace are also used.
                                     items:
                                       type: string
                                     type: array
@@ -6813,7 +6822,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -7898,7 +7908,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -8281,7 +8292,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -9038,7 +9050,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -10379,7 +10392,8 @@ spec:
                               secrets:
                                 description: |-
                                   Secrets specifies a list of secrets that are provided for credentials.
-                                  Secrets must live in the Kyverno namespace.
+                                  Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                  imagePullSecrets from the resource namespace are also used.
                                 items:
                                   type: string
                                 type: array
@@ -10857,7 +10871,8 @@ spec:
                                       secrets:
                                         description: |-
                                           Secrets specifies a list of secrets that are provided for credentials.
-                                          Secrets must live in the Kyverno namespace.
+                                          Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                          imagePullSecrets from the resource namespace are also used.
                                         items:
                                           type: string
                                         type: array
@@ -11908,7 +11923,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -13005,7 +13021,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -13397,7 +13414,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -14167,7 +14185,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -15532,7 +15551,8 @@ spec:
                                   secrets:
                                     description: |-
                                       Secrets specifies a list of secrets that are provided for credentials.
-                                      Secrets must live in the Kyverno namespace.
+                                      Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                      imagePullSecrets from the resource namespace are also used.
                                     items:
                                       type: string
                                     type: array
@@ -16063,7 +16083,8 @@ spec:
                                   secrets:
                                     description: |-
                                       Secrets specifies a list of secrets that are provided for credentials.
-                                      Secrets must live in the Kyverno namespace.
+                                      Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                      imagePullSecrets from the resource namespace are also used.
                                     items:
                                       type: string
                                     type: array
@@ -16897,7 +16918,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -17776,7 +17798,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -18159,7 +18182,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -19081,7 +19105,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -20403,7 +20428,8 @@ spec:
                               secrets:
                                 description: |-
                                   Secrets specifies a list of secrets that are provided for credentials.
-                                  Secrets must live in the Kyverno namespace.
+                                  Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                  imagePullSecrets from the resource namespace are also used.
                                 items:
                                   type: string
                                 type: array
@@ -20869,7 +20895,8 @@ spec:
                                       secrets:
                                         description: |-
                                           Secrets specifies a list of secrets that are provided for credentials.
-                                          Secrets must live in the Kyverno namespace.
+                                          Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                          imagePullSecrets from the resource namespace are also used.
                                         items:
                                           type: string
                                         type: array
@@ -21920,7 +21947,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -23017,7 +23045,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -23409,7 +23438,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -24179,7 +24209,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -25544,7 +25575,8 @@ spec:
                                   secrets:
                                     description: |-
                                       Secrets specifies a list of secrets that are provided for credentials.
-                                      Secrets must live in the Kyverno namespace.
+                                      Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                      imagePullSecrets from the resource namespace are also used.
                                     items:
                                       type: string
                                     type: array
@@ -25751,7 +25783,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: globalcontextentries.kyverno.io
@@ -26533,7 +26565,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: policies.kyverno.io
@@ -26883,7 +26915,8 @@ spec:
                                   secrets:
                                     description: |-
                                       Secrets specifies a list of secrets that are provided for credentials.
-                                      Secrets must live in the Kyverno namespace.
+                                      Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                      imagePullSecrets from the resource namespace are also used.
                                     items:
                                       type: string
                                     type: array
@@ -27923,7 +27956,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -29008,7 +29042,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -29391,7 +29426,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -30148,7 +30184,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -31489,7 +31526,8 @@ spec:
                               secrets:
                                 description: |-
                                   Secrets specifies a list of secrets that are provided for credentials.
-                                  Secrets must live in the Kyverno namespace.
+                                  Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                  imagePullSecrets from the resource namespace are also used.
                                 items:
                                   type: string
                                 type: array
@@ -31968,7 +32006,8 @@ spec:
                                       secrets:
                                         description: |-
                                           Secrets specifies a list of secrets that are provided for credentials.
-                                          Secrets must live in the Kyverno namespace.
+                                          Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                          imagePullSecrets from the resource namespace are also used.
                                         items:
                                           type: string
                                         type: array
@@ -33019,7 +33058,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -34116,7 +34156,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -34508,7 +34549,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -35278,7 +35320,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -36643,7 +36686,8 @@ spec:
                                   secrets:
                                     description: |-
                                       Secrets specifies a list of secrets that are provided for credentials.
-                                      Secrets must live in the Kyverno namespace.
+                                      Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                      imagePullSecrets from the resource namespace are also used.
                                     items:
                                       type: string
                                     type: array
@@ -37175,7 +37219,8 @@ spec:
                                   secrets:
                                     description: |-
                                       Secrets specifies a list of secrets that are provided for credentials.
-                                      Secrets must live in the Kyverno namespace.
+                                      Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                      imagePullSecrets from the resource namespace are also used.
                                     items:
                                       type: string
                                     type: array
@@ -38009,7 +38054,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -38888,7 +38934,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -39271,7 +39318,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -40193,7 +40241,8 @@ spec:
                                             secrets:
                                               description: |-
                                                 Secrets specifies a list of secrets that are provided for credentials.
-                                                Secrets must live in the Kyverno namespace.
+                                                Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                imagePullSecrets from the resource namespace are also used.
                                               items:
                                                 type: string
                                               type: array
@@ -41515,7 +41564,8 @@ spec:
                               secrets:
                                 description: |-
                                   Secrets specifies a list of secrets that are provided for credentials.
-                                  Secrets must live in the Kyverno namespace.
+                                  Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                  imagePullSecrets from the resource namespace are also used.
                                 items:
                                   type: string
                                 type: array
@@ -41981,7 +42031,8 @@ spec:
                                       secrets:
                                         description: |-
                                           Secrets specifies a list of secrets that are provided for credentials.
-                                          Secrets must live in the Kyverno namespace.
+                                          Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                          imagePullSecrets from the resource namespace are also used.
                                         items:
                                           type: string
                                         type: array
@@ -43032,7 +43083,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -44129,7 +44181,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -44521,7 +44574,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -45291,7 +45345,8 @@ spec:
                                                 secrets:
                                                   description: |-
                                                     Secrets specifies a list of secrets that are provided for credentials.
-                                                    Secrets must live in the Kyverno namespace.
+                                                    Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                                    imagePullSecrets from the resource namespace are also used.
                                                   items:
                                                     type: string
                                                   type: array
@@ -46656,7 +46711,8 @@ spec:
                                   secrets:
                                     description: |-
                                       Secrets specifies a list of secrets that are provided for credentials.
-                                      Secrets must live in the Kyverno namespace.
+                                      Secrets can be specified as a name (Kyverno namespace) or namespace/name.
+                                      imagePullSecrets from the resource namespace are also used.
                                     items:
                                       type: string
                                     type: array
@@ -46863,7 +46919,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: policyexceptions.kyverno.io
@@ -48169,7 +48225,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: updaterequests.kyverno.io
@@ -49011,7 +49067,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: clusterephemeralreports.reports.kyverno.io
@@ -49353,7 +49409,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: ephemeralreports.reports.kyverno.io
@@ -49695,7 +49751,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: clusterpolicyreports.wgpolicyk8s.io
@@ -50061,7 +50117,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: policyreports.wgpolicyk8s.io
@@ -87058,8 +87114,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -87076,8 +87133,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 rules:
   - apiGroups:
       - apiextensions.k8s.io
@@ -87259,8 +87317,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -87277,8 +87336,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 rules:
   - apiGroups:
       - apiextensions.k8s.io
@@ -87421,8 +87481,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -87439,8 +87500,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 rules:
   - apiGroups:
       - apiextensions.k8s.io
@@ -87554,7 +87616,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
   - apiGroups:
@@ -87581,7 +87643,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
   - apiGroups:
@@ -87604,7 +87666,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
   - apiGroups:
@@ -87629,7 +87691,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
   - apiGroups:
@@ -87650,7 +87712,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
   - apiGroups:
@@ -87675,7 +87737,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
   - apiGroups:
@@ -87696,7 +87758,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
   - apiGroups:
@@ -87720,7 +87782,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
   - apiGroups:
@@ -87739,8 +87801,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -87757,8 +87820,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 rules:
   - apiGroups:
       - apiextensions.k8s.io
@@ -87896,8 +87960,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -87914,8 +87979,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -87932,8 +87998,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -87950,8 +88017,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -87968,8 +88036,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -87986,8 +88055,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88004,8 +88074,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88023,8 +88094,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 rules:
   - apiGroups:
       - ''
@@ -88077,8 +88149,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   namespace: kyverno
 rules:
   - apiGroups:
@@ -88125,8 +88198,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   namespace: kyverno
 rules:
   - apiGroups:
@@ -88148,6 +88222,8 @@ rules:
     resourceNames:
       - kyverno-cleanup-controller.kyverno.svc.kyverno-tls-ca
       - kyverno-cleanup-controller.kyverno.svc.kyverno-tls-pair
+      - kyverno-cleanup-controller.kyverno.metering.kyverno-tls-ca
+      - kyverno-cleanup-controller.kyverno.metering.kyverno-tls-pair
   - apiGroups:
       - ''
     resources:
@@ -88198,8 +88274,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   namespace: kyverno
 rules:
   - apiGroups:
@@ -88247,8 +88324,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -88265,8 +88343,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   namespace: kyverno
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -88284,8 +88363,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   namespace: kyverno
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -88303,8 +88383,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
   namespace: kyverno
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -88323,8 +88404,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   ports:
   - port: 443
@@ -88346,8 +88428,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   ports:
   - port: 8000
@@ -88368,8 +88451,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   ports:
   - port: 8000
@@ -88390,8 +88474,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   ports:
   - port: 443
@@ -88413,8 +88498,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   ports:
   - port: 8000
@@ -88435,8 +88521,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   ports:
   - port: 8000
@@ -88457,8 +88544,9 @@ metadata:
   labels:
     app.kubernetes.io/component: admission-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   replicas: 
   revisionHistoryLimit: 10
@@ -88477,8 +88565,9 @@ spec:
       labels:
         app.kubernetes.io/component: admission-controller
         app.kubernetes.io/instance: kyverno
+        app.kubernetes.io/name: kyverno-admission-controller
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: v1.17.1
+        app.kubernetes.io/version: v1.18.1
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -88499,7 +88588,7 @@ spec:
       automountServiceAccountToken: true
       initContainers:
         - name: kyverno-pre
-          image: "reg.kyverno.io/kyverno/kyvernopre:v1.17.1"
+          image: "reg.kyverno.io/kyverno/kyvernopre:v1.18.1"
           imagePullPolicy: IfNotPresent
           args:
             - --loggingFormat=text
@@ -88519,7 +88608,9 @@ spec:
               - ALL
             privileged: false
             readOnlyRootFilesystem: true
+            runAsGroup: 65534
             runAsNonRoot: true
+            runAsUser: 65534
             seccompProfile:
               type: RuntimeDefault
           env:
@@ -88545,7 +88636,7 @@ spec:
             value: kyverno-svc
       containers:
         - name: kyverno
-          image: "reg.kyverno.io/kyverno/kyverno:v1.17.1"
+          image: "reg.kyverno.io/kyverno/kyverno:v1.18.1"
           imagePullPolicy: IfNotPresent
           args:
             - --caSecretName=kyverno-svc.kyverno.svc.kyverno-tls-ca
@@ -88572,6 +88663,7 @@ spec:
             - --generateMutatingAdmissionPolicy=false
             - --dumpPatches=false
             - --maxAPICallResponseLength=2000000
+            - --apiCallTimeout=30s
             - --loggingFormat=text
             - --v=2
             - --omitEvents=PolicyApplied,PolicySkipped
@@ -88594,7 +88686,9 @@ spec:
               - ALL
             privileged: false
             readOnlyRootFilesystem: true
+            runAsGroup: 65534
             runAsNonRoot: true
+            runAsUser: 65534
             seccompProfile:
               type: RuntimeDefault
           ports:
@@ -88659,9 +88753,20 @@ spec:
           volumeMounts:
             - mountPath: /.sigstore
               name: sigstore
+            - name: apicall-token
+              mountPath: /var/run/secrets/kyverno/apicall
+              readOnly: true
       volumes:
       - name: sigstore
         emptyDir: {}
+      - name: apicall-token
+        projected:
+          defaultMode: 0444
+          sources:
+            - serviceAccountToken:
+                path: token
+                expirationSeconds: 3600
+                audience: kyverno-svc.kyverno.io
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -88671,8 +88776,9 @@ metadata:
   labels:
     app.kubernetes.io/component: background-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   replicas: 
   revisionHistoryLimit: 10
@@ -88691,8 +88797,9 @@ spec:
       labels:
         app.kubernetes.io/component: background-controller
         app.kubernetes.io/instance: kyverno
+        app.kubernetes.io/name: kyverno-background-controller
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: v1.17.1
+        app.kubernetes.io/version: v1.18.1
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -88713,7 +88820,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: controller
-          image: "reg.kyverno.io/kyverno/background-controller:v1.17.1"
+          image: "reg.kyverno.io/kyverno/background-controller:v1.18.1"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 9443
@@ -88729,8 +88836,10 @@ spec:
             - --metricsPort=8000
             - --resyncPeriod=15m
             - --enableConfigMapCaching=true
+            - --controllerRuntimeMetricsAddress=:8080
             - --enableDeferredLoading=true
             - --maxAPICallResponseLength=2000000
+            - --apiCallTimeout=30s
             - --loggingFormat=text
             - --v=2
             - --omitEvents=PolicyApplied,PolicySkipped
@@ -88767,9 +88876,24 @@ spec:
               - ALL
             privileged: false
             readOnlyRootFilesystem: true
+            runAsGroup: 65534
             runAsNonRoot: true
+            runAsUser: 65534
             seccompProfile:
               type: RuntimeDefault
+          volumeMounts:
+            - name: apicall-token
+              mountPath: /var/run/secrets/kyverno/apicall
+              readOnly: true
+      volumes:
+      - name: apicall-token
+        projected:
+          defaultMode: 0444
+          sources:
+            - serviceAccountToken:
+                path: token
+                expirationSeconds: 3600
+                audience: kyverno-svc.kyverno.io
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -88779,8 +88903,9 @@ metadata:
   labels:
     app.kubernetes.io/component: cleanup-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   replicas: 
   revisionHistoryLimit: 10
@@ -88799,8 +88924,9 @@ spec:
       labels:
         app.kubernetes.io/component: cleanup-controller
         app.kubernetes.io/instance: kyverno
+        app.kubernetes.io/name: kyverno-cleanup-controller
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: v1.17.1
+        app.kubernetes.io/version: v1.18.1
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -88821,7 +88947,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: controller
-          image: "reg.kyverno.io/kyverno/cleanup-controller:v1.17.1"
+          image: "reg.kyverno.io/kyverno/cleanup-controller:v1.18.1"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 9443
@@ -88844,6 +88970,7 @@ spec:
             - --enableDeferredLoading=true
             - --dumpPayload=false
             - --maxAPICallResponseLength=2000000
+            - --apiCallTimeout=30s
             - --loggingFormat=text
             - --v=2
             - --protectManagedResources=false
@@ -88883,7 +89010,9 @@ spec:
               - ALL
             privileged: false
             readOnlyRootFilesystem: true
+            runAsGroup: 65534
             runAsNonRoot: true
+            runAsUser: 65534
             seccompProfile:
               type: RuntimeDefault
           startupProbe:
@@ -88914,6 +89043,19 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 5
+          volumeMounts:
+            - name: apicall-token
+              mountPath: /var/run/secrets/kyverno/apicall
+              readOnly: true
+      volumes:
+        - name: apicall-token
+          projected:
+            defaultMode: 0444
+            sources:
+              - serviceAccountToken:
+                  path: token
+                  expirationSeconds: 3600
+                  audience: kyverno-svc.kyverno.io
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -88923,8 +89065,9 @@ metadata:
   labels:
     app.kubernetes.io/component: reports-controller
     app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.17.1
+    app.kubernetes.io/version: v1.18.1
 spec:
   replicas: 
   revisionHistoryLimit: 10
@@ -88943,8 +89086,9 @@ spec:
       labels:
         app.kubernetes.io/component: reports-controller
         app.kubernetes.io/instance: kyverno
+        app.kubernetes.io/name: kyverno-reports-controller
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: v1.17.1
+        app.kubernetes.io/version: v1.18.1
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -88965,7 +89109,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: controller
-          image: "reg.kyverno.io/kyverno/reports-controller:v1.17.1"
+          image: "reg.kyverno.io/kyverno/reports-controller:v1.18.1"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 9443
@@ -88993,6 +89137,7 @@ spec:
             - --enableConfigMapCaching=true
             - --enableDeferredLoading=true
             - --maxAPICallResponseLength=2000000
+            - --apiCallTimeout=30s
             - --loggingFormat=text
             - --v=2
             - --omitEvents=PolicyApplied,PolicySkipped
@@ -89032,12 +89177,25 @@ spec:
               - ALL
             privileged: false
             readOnlyRootFilesystem: true
+            runAsGroup: 65534
             runAsNonRoot: true
+            runAsUser: 65534
             seccompProfile:
               type: RuntimeDefault
           volumeMounts:
             - mountPath: /.sigstore
               name: sigstore
+            - name: apicall-token
+              mountPath: /var/run/secrets/kyverno/apicall
+              readOnly: true
       volumes:
       - name: sigstore
         emptyDir: {}
+      - name: apicall-token
+        projected:
+          defaultMode: 0444
+          sources:
+            - serviceAccountToken:
+                path: token
+                expirationSeconds: 3600
+                audience: kyverno-svc.kyverno.io

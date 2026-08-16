@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -18,7 +18,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 automountServiceAccountToken: false
 ---
 apiVersion: v1
@@ -31,7 +31,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 automountServiceAccountToken: false
 ---
 apiVersion: v1
@@ -44,7 +44,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 automountServiceAccountToken: false
 ---
 apiVersion: v1
@@ -57,7 +57,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 automountServiceAccountToken: false
 ---
 apiVersion: v1
@@ -69,7 +69,7 @@ metadata:
     app.kubernetes.io/component: config
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     helm.sh/resource-policy: "keep"
 data:
@@ -195,7 +195,7 @@ metadata:
     app.kubernetes.io/component: config
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 data:
   namespaces: "{\"exclude\":[],\"include\":[]}"
   metricsExposure: "{\"kyverno_admission_requests_total\":{\"disabledLabelDimensions\":[\"resource_namespace\"]},\"kyverno_admission_review_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\"]},\"kyverno_cleanup_controller_deletedobjects_total\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"policy_namespace\"]},\"kyverno_generating_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]},\"kyverno_image_validating_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]},\"kyverno_mutating_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]},\"kyverno_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]},\"kyverno_policy_results_total\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"policy_namespace\"]},\"kyverno_policy_rule_info_total\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"policy_namespace\"]},\"kyverno_validating_policy_execution_duration_seconds\":{\"disabledLabelDimensions\":[\"resource_namespace\",\"resource_request_operation\"]}}"
@@ -208,7 +208,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: cleanuppolicies.kyverno.io
@@ -2820,7 +2820,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: clustercleanuppolicies.kyverno.io
@@ -5432,7 +5432,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: clusterpolicies.kyverno.io
@@ -25783,7 +25783,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: globalcontextentries.kyverno.io
@@ -26565,7 +26565,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: policies.kyverno.io
@@ -46919,7 +46919,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: policyexceptions.kyverno.io
@@ -48225,7 +48225,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: updaterequests.kyverno.io
@@ -49067,7 +49067,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: clusterephemeralreports.reports.kyverno.io
@@ -49409,7 +49409,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: ephemeralreports.reports.kyverno.io
@@ -49751,7 +49751,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: clusterpolicyreports.wgpolicyk8s.io
@@ -50117,7 +50117,7 @@ metadata:
     app.kubernetes.io/component: crds
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno-crds
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   annotations:
     controller-gen.kubebuilder.io/version: v0.20.0
   name: policyreports.wgpolicyk8s.io
@@ -87116,7 +87116,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -87135,7 +87135,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 rules:
   - apiGroups:
       - apiextensions.k8s.io
@@ -87319,7 +87319,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -87338,7 +87338,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 rules:
   - apiGroups:
       - apiextensions.k8s.io
@@ -87483,7 +87483,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -87502,7 +87502,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 rules:
   - apiGroups:
       - apiextensions.k8s.io
@@ -87616,7 +87616,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
   - apiGroups:
@@ -87643,7 +87643,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
   - apiGroups:
@@ -87666,7 +87666,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
   - apiGroups:
@@ -87691,7 +87691,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
   - apiGroups:
@@ -87712,7 +87712,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
   - apiGroups:
@@ -87737,7 +87737,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
   - apiGroups:
@@ -87758,7 +87758,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
   - apiGroups:
@@ -87782,7 +87782,7 @@ metadata:
     app.kubernetes.io/component: rbac
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
     rbac.authorization.k8s.io/aggregate-to-view: "true"
 rules:
   - apiGroups:
@@ -87803,7 +87803,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 aggregationRule:
   clusterRoleSelectors:
     - matchLabels:
@@ -87822,7 +87822,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 rules:
   - apiGroups:
       - apiextensions.k8s.io
@@ -87962,7 +87962,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -87981,7 +87981,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88000,7 +88000,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88019,7 +88019,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88038,7 +88038,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88057,7 +88057,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88076,7 +88076,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -88096,7 +88096,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 rules:
   - apiGroups:
       - ''
@@ -88151,7 +88151,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   namespace: kyverno
 rules:
   - apiGroups:
@@ -88200,7 +88200,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   namespace: kyverno
 rules:
   - apiGroups:
@@ -88276,7 +88276,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   namespace: kyverno
 rules:
   - apiGroups:
@@ -88326,7 +88326,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -88345,7 +88345,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   namespace: kyverno
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -88365,7 +88365,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   namespace: kyverno
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -88385,7 +88385,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
   namespace: kyverno
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -88406,7 +88406,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   ports:
   - port: 443
@@ -88430,7 +88430,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   ports:
   - port: 8000
@@ -88453,7 +88453,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   ports:
   - port: 8000
@@ -88476,7 +88476,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   ports:
   - port: 443
@@ -88500,7 +88500,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   ports:
   - port: 8000
@@ -88523,7 +88523,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   ports:
   - port: 8000
@@ -88546,7 +88546,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-admission-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   replicas: 
   revisionHistoryLimit: 10
@@ -88567,7 +88567,7 @@ spec:
         app.kubernetes.io/instance: kyverno
         app.kubernetes.io/name: kyverno-admission-controller
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: v1.18.1
+        app.kubernetes.io/version: v1.18.2
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -88588,7 +88588,7 @@ spec:
       automountServiceAccountToken: true
       initContainers:
         - name: kyverno-pre
-          image: "reg.kyverno.io/kyverno/kyvernopre:v1.18.1"
+          image: "reg.kyverno.io/kyverno/kyvernopre:v1.18.2"
           imagePullPolicy: IfNotPresent
           args:
             - --loggingFormat=text
@@ -88636,7 +88636,7 @@ spec:
             value: kyverno-svc
       containers:
         - name: kyverno
-          image: "reg.kyverno.io/kyverno/kyverno:v1.18.1"
+          image: "reg.kyverno.io/kyverno/kyverno:v1.18.2"
           imagePullPolicy: IfNotPresent
           args:
             - --caSecretName=kyverno-svc.kyverno.svc.kyverno-tls-ca
@@ -88778,7 +88778,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-background-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   replicas: 
   revisionHistoryLimit: 10
@@ -88799,7 +88799,7 @@ spec:
         app.kubernetes.io/instance: kyverno
         app.kubernetes.io/name: kyverno-background-controller
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: v1.18.1
+        app.kubernetes.io/version: v1.18.2
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -88820,7 +88820,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: controller
-          image: "reg.kyverno.io/kyverno/background-controller:v1.18.1"
+          image: "reg.kyverno.io/kyverno/background-controller:v1.18.2"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 9443
@@ -88905,7 +88905,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-cleanup-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   replicas: 
   revisionHistoryLimit: 10
@@ -88926,7 +88926,7 @@ spec:
         app.kubernetes.io/instance: kyverno
         app.kubernetes.io/name: kyverno-cleanup-controller
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: v1.18.1
+        app.kubernetes.io/version: v1.18.2
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -88947,7 +88947,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: controller
-          image: "reg.kyverno.io/kyverno/cleanup-controller:v1.18.1"
+          image: "reg.kyverno.io/kyverno/cleanup-controller:v1.18.2"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 9443
@@ -89067,7 +89067,7 @@ metadata:
     app.kubernetes.io/instance: kyverno
     app.kubernetes.io/name: kyverno-reports-controller
     app.kubernetes.io/part-of: kyverno
-    app.kubernetes.io/version: v1.18.1
+    app.kubernetes.io/version: v1.18.2
 spec:
   replicas: 
   revisionHistoryLimit: 10
@@ -89088,7 +89088,7 @@ spec:
         app.kubernetes.io/instance: kyverno
         app.kubernetes.io/name: kyverno-reports-controller
         app.kubernetes.io/part-of: kyverno
-        app.kubernetes.io/version: v1.18.1
+        app.kubernetes.io/version: v1.18.2
     spec:
       nodeSelector:
         kubernetes.io/os: linux
@@ -89109,7 +89109,7 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: controller
-          image: "reg.kyverno.io/kyverno/reports-controller:v1.18.1"
+          image: "reg.kyverno.io/kyverno/reports-controller:v1.18.2"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 9443

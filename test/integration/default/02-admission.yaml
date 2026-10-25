@@ -1,3 +1,4 @@
+---
 # The policy takes effect once Kyverno has registered it, so the request is retried until it is denied.
 apiVersion: kuttl.dev/v1beta1
 kind: TestStep

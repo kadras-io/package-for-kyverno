@@ -27,6 +27,20 @@ subjects:
 #@overlay/match by=overlay.subset({"kind":"ServiceAccount"})
 - namespace: #@ namespace
 
+#! The Roles grant access to the certificate Secrets by name, which includes the namespace,
+#! like `kyverno-cleanup-controller.kyverno.svc.kyverno-tls-ca`.
+#@ def namespaced_names(left, _):
+#@   return [name.replace(".kyverno.", "." + namespace + ".") for name in left]
+#@ end
+
+#@overlay/match by=overlay.subset({"kind":"Role"}), expects="1+"
+---
+rules:
+#@overlay/match by=lambda _, left, __: "resourceNames" in left, expects="0+"
+-
+  #@overlay/replace via=namespaced_names
+  resourceNames:
+
 #! Kyverno doesn't process the requests for its own resources, nor for the ones in its namespace and in kube-system.
 #! See: https://kyverno.io/docs/installation/customization/#resource-filters
 #@ def resource_filters(left, _):

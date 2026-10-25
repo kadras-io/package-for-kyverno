@@ -1,5 +1,5 @@
-# Custom namespace, with high availability and network policies.
 ---
+# Custom namespace, with high availability and network policies.
 apiVersion: apps/v1
 kind: Deployment
 metadata:

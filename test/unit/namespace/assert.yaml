@@ -68,3 +68,12 @@ kind: Secret
 metadata:
   name: canonical-registry-credentials
   namespace: policies
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kyverno:cleanup-controller
+  namespace: policies
+# The certificate Secrets are named after the namespace.
+(rules[?resourceNames && contains(resourceNames, 'kyverno-cleanup-controller.policies.svc.kyverno-tls-pair')] | length(@)): 1
+(rules[].resourceNames[] | [?contains(@, '.kyverno.')] | length(@)): 0

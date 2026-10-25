@@ -1,5 +1,5 @@
-# The webhooks Kyverno registers at runtime are deleted with the package, so they don't block the cluster.
 ---
+# The webhooks Kyverno registers at runtime are deleted with the package, so they don't block the cluster.
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:

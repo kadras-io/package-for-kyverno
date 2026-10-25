@@ -1,5 +1,5 @@
-# All the controllers are ready, and the webhooks are owned by the package ClusterRole.
 ---
+# All the controllers are ready, and the webhooks are owned by the package ClusterRole.
 apiVersion: apps/v1
 kind: Deployment
 metadata:

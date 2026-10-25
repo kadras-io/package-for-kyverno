@@ -18,7 +18,7 @@ done
 
 The Kyverno CRDs are part of the package. Deleting the PackageInstall deletes them, and with them all the policies, policy exceptions, and policy reports in the cluster. The resource and policy webhooks Kyverno registers at runtime are deleted as well, so that they don't block the cluster.
 
-The webhooks for policy exceptions, cleanup policies, and global context entries are left behind. They only match Kyverno resources, so they don't block the cluster. Delete them with:
+The webhooks for policy exceptions, cleanup policies, global context entries, and the `cleanup.kyverno.io/ttl` label are left behind. They only match Kyverno resources, or ignore failures, so they don't block the cluster. Delete them with:
 
 ```shell
 kubectl delete validatingwebhookconfiguration -l webhook.kyverno.io/managed-by=kyverno

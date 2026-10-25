@@ -1,17 +1,14 @@
 ---
-apiVersion: policies.kyverno.io/v1
-kind: ValidatingPolicy
-metadata:
-  name: require-team-label
-spec:
-  validationActions:
-  - Deny
-  matchConstraints:
-    resourceRules:
-    - apiGroups: [""]
-      apiVersions: [v1]
-      operations: [CREATE, UPDATE]
-      resources: [pods]
-  validations:
-  - expression: "has(object.metadata.labels) && 'team' in object.metadata.labels"
-    message: Pods must have the team label.
+# Kyverno validates the policies via its webhooks, which can briefly refuse connections right after the installation,
+# until the endpoints of the Service are ready. So the policy is applied until it's accepted.
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+commands:
+  - script: |
+      for attempt in $(seq 1 20); do
+        if kubectl apply -f policy.yaml; then
+          exit 0
+        fi
+        sleep 3
+      done
+      exit 1

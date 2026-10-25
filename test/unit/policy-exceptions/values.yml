@@ -1,0 +1,4 @@
+---
+policy_exceptions:
+  enabled: true
+  namespace: kyverno-exceptions

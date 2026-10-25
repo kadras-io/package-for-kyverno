@@ -1,0 +1,4 @@
+# expected: `policy_exceptions.namespace` to be set when `policy_exceptions.enabled` is true
+---
+policy_exceptions:
+  enabled: true

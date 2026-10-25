@@ -1,0 +1,8 @@
+---
+observability:
+  metrics:
+    exporter: otlp
+    endpoint: http://otel-collector.observability.svc:4317
+    ca_secret: otel-ca
+security:
+  network_policies: true

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'kyverno'] | [0]):
+        (env[?name == 'HTTPS_PROXY'] | [0].value): https://proxy.example.com:3128
+        (env[?name == 'NO_PROXY'] | [0].value): .cluster.local,.svc
+        # Only the values that are set.
+        (env[?name == 'HTTP_PROXY'] | length(@)): 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-background-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (env[?name == 'HTTPS_PROXY'] | [0].value): https://proxy.example.com:3128
+        (env[?name == 'NO_PROXY'] | [0].value): .cluster.local,.svc
+        # Only the values that are set.
+        (env[?name == 'HTTP_PROXY'] | length(@)): 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-cleanup-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (env[?name == 'HTTPS_PROXY'] | [0].value): https://proxy.example.com:3128
+        (env[?name == 'NO_PROXY'] | [0].value): .cluster.local,.svc
+        # Only the values that are set.
+        (env[?name == 'HTTP_PROXY'] | length(@)): 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-reports-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (env[?name == 'HTTPS_PROXY'] | [0].value): https://proxy.example.com:3128
+        (env[?name == 'NO_PROXY'] | [0].value): .cluster.local,.svc
+        # Only the values that are set.
+        (env[?name == 'HTTP_PROXY'] | length(@)): 0

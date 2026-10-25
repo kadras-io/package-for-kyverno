@@ -1,46 +1,41 @@
 #@ load("@ytt:data", "data")
 #@ load("@ytt:overlay", "overlay")
+#@ load("/lib/kyverno.star", "enabled_components")
 
-#! List of Kyverno Deployments interacting with OCI registries.
-#@ deployments = ["kyverno-admission-controller", "kyverno-background-controller", "kyverno-reports-controller"]
+#! The additional certificate authorities are mounted in a separate directory, listed in `SSL_CERT_DIR`.
+#! The controllers, written in Go, trust the certificates in that directory in addition to the system ones.
+#! See: https://pkg.go.dev/crypto/x509#SystemCertPool
 
-#@ if data.values.ca_cert_data != "":
-
+#@ if data.values.ca_cert_data:
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: kyverno-certs
-  namespace: kyverno
+  name: kyverno-ca-certificates
+  namespace: #@ data.values.namespace
+type: Opaque
 stringData:
-  #@yaml/text-templated-strings
-  ca-certificates: |
-    (@= data.values.ca_cert_data @)
+  ca.crt: #@ data.values.ca_cert_data
 
-#@ for deployment in deployments:
-
-#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":deployment}}), expects="1+"
+#@ for component in enabled_components():
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":component.deployment}})
 ---
 spec:
   template:
     spec:
       containers:
-        #@overlay/match by=overlay.all, expects=1
-        - 
-          #@overlay/match missing_ok=True
+        #@overlay/match by="name"
+        - name: #@ component.container
+          env:
+          - name: SSL_CERT_DIR
+            value: /etc/ssl/certs-extra
           volumeMounts:
-            - name: ca-certificates
-              mountPath: /etc/ssl/certs/ca-certificates.crt
-              subPath: ca-certificates.crt
-      #@overlay/match missing_ok=True
+          - name: ca-certificates
+            mountPath: /etc/ssl/certs-extra
+            readOnly: true
       volumes:
-        - name: ca-certificates
-          secret:
-            secretName: kyverno-certs
-            items:
-            - key: ca-certificates
-              path: ca-certificates.crt
-
+      - name: ca-certificates
+        secret:
+          secretName: kyverno-ca-certificates
 #@ end
-
 #@ end

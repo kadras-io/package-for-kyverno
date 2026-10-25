@@ -1,0 +1,4 @@
+# expected: a duration, like `1h` or `30m`
+---
+reports:
+  background_scan_interval: 1 hour

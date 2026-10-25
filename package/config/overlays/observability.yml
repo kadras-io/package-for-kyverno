@@ -1,0 +1,27 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("/lib/kyverno.star", "enabled_components", "prometheus_metrics_enabled")
+
+#! With the Prometheus exporter, all the controllers expose metrics on port 8000 (`/metrics`),
+#! and their Pods are annotated for Prometheus scraping. With the OTLP exporter, they push the metrics
+#! to the collector instead. The log level and format, and the metrics and traces exporters
+#! are configured via flags (see lib/kyverno.star).
+#! See: https://kyverno.io/docs/guides/monitoring/
+
+#@ if prometheus_metrics_enabled():
+#@ for component in enabled_components():
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":component.deployment}})
+---
+spec:
+  template:
+    metadata:
+      #@overlay/match missing_ok=True
+      annotations:
+        #@overlay/match missing_ok=True
+        prometheus.io/scrape: "true"
+        #@overlay/match missing_ok=True
+        prometheus.io/port: "8000"
+        #@overlay/match missing_ok=True
+        prometheus.io/path: /metrics
+#@ end
+#@ end

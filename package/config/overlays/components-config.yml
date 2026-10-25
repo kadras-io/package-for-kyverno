@@ -1,0 +1,43 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("/lib/kyverno.star", "args_merger", "component_args", "config_data", "enabled_components", "logging_args")
+
+#! Each controller is configured via flags. The ones computed from the package values are merged
+#! into the upstream flags, then `<component>.args` is merged on top, so its flags take precedence.
+#! See: https://kyverno.io/docs/installation/customization/#container-flags
+
+#@ for component in enabled_components():
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":component.deployment}})
+---
+spec:
+  template:
+    spec:
+      containers:
+        #@overlay/match by="name"
+        - name: #@ component.container
+          #@overlay/replace via=args_merger(component_args(component))
+          args:
+#@ end
+
+#! The init container of the admission controller only takes the logging flags.
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":"kyverno-admission-controller"}})
+---
+spec:
+  template:
+    spec:
+      initContainers:
+        #@overlay/match by="name"
+        - name: kyverno-pre
+          #@overlay/replace via=args_merger(logging_args())
+          args:
+
+#! The dynamic configuration of Kyverno, read by all controllers at runtime.
+#! See: https://kyverno.io/docs/installation/customization/#configmap-keys
+
+#@ config = config_data()
+#@ if config:
+#@overlay/match by=overlay.subset({"kind":"ConfigMap", "metadata":{"name":"kyverno"}})
+---
+#@overlay/match-child-defaults missing_ok=True
+data: #@ config
+#@ end

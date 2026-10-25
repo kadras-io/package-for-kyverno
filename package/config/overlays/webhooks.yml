@@ -1,0 +1,34 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("/lib/kyverno.star", "enabled_components")
+
+#! Kyverno registers its admission webhooks at runtime, so they're not part of the package, and they'd be
+#! left behind when uninstalling it. With their failure policy, the leftover webhooks would block the requests
+#! to the Kubernetes API server. Kyverno sets a ClusterRole named `*:webhook`, labeled as its own component,
+#! as the owner of the resource and policy webhooks, so that Kubernetes deletes them with the ClusterRole.
+#! The ClusterRole has no rules, and it's deleted after the controllers, so that they don't recreate the webhooks.
+#! See: https://kyverno.io/docs/installation/uninstallation/
+
+#@ webhook_owner = "kyverno.packages.kadras.io/webhook-owner"
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno:webhook
+  labels:
+    app.kubernetes.io/component: kyverno
+    app.kubernetes.io/instance: kyverno
+    app.kubernetes.io/part-of: kyverno
+  annotations:
+    kapp.k14s.io/change-group: #@ webhook_owner
+rules: []
+
+#@ for component in enabled_components():
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":component.deployment}})
+---
+metadata:
+  #@overlay/match missing_ok=True
+  annotations:
+    #@overlay/match missing_ok=True
+    kapp.k14s.io/change-rule.webhook-owner: #@ "delete before deleting " + webhook_owner
+#@ end

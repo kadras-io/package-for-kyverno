@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-background-controller
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-cleanup-controller
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-reports-controller
+---
+# The replicas of a disabled controller don't create a PodDisruptionBudget.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kyverno-reports-controller
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kyverno-cleanup-controller
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno:background-controller
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kyverno-reports-controller

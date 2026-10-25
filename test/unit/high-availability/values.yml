@@ -1,0 +1,9 @@
+---
+admission_controller:
+  replicas: 3
+background_controller:
+  replicas: 2
+cleanup_controller:
+  replicas: 2
+reports_controller:
+  replicas: 2

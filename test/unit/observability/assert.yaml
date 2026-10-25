@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+spec:
+  template:
+    metadata:
+      (annotations == null || annotations."prometheus.io/scrape" == null): true
+    spec:
+      (containers[?name == 'kyverno'] | [0]):
+        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--v=4')): true
+        (contains(args, '--disableMetrics=true')): true
+        (contains(args, '--enableTracing=true')): true
+        (contains(args, '--tracingAddress=otel-collector.observability.svc')): true
+        (contains(args, '--tracingPort=4317')): true
+        (contains(args, '--tracingCreds=otel-ca')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-background-controller
+spec:
+  template:
+    metadata:
+      (annotations == null || annotations."prometheus.io/scrape" == null): true
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--v=4')): true
+        (contains(args, '--disableMetrics=true')): true
+        (contains(args, '--enableTracing=true')): true
+        (contains(args, '--tracingAddress=otel-collector.observability.svc')): true
+        (contains(args, '--tracingPort=4317')): true
+        (contains(args, '--tracingCreds=otel-ca')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-cleanup-controller
+spec:
+  template:
+    metadata:
+      (annotations == null || annotations."prometheus.io/scrape" == null): true
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--v=4')): true
+        (contains(args, '--disableMetrics=true')): true
+        (contains(args, '--enableTracing=true')): true
+        (contains(args, '--tracingAddress=otel-collector.observability.svc')): true
+        (contains(args, '--tracingPort=4317')): true
+        (contains(args, '--tracingCreds=otel-ca')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-reports-controller
+spec:
+  template:
+    metadata:
+      (annotations == null || annotations."prometheus.io/scrape" == null): true
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--v=4')): true
+        (contains(args, '--disableMetrics=true')): true
+        (contains(args, '--enableTracing=true')): true
+        (contains(args, '--tracingAddress=otel-collector.observability.svc')): true
+        (contains(args, '--tracingPort=4317')): true
+        (contains(args, '--tracingCreds=otel-ca')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+spec:
+  template:
+    spec:
+      (initContainers[?name == 'kyverno-pre'] | [0]):
+        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--v=4')): true

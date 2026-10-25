@@ -1,12 +1,12 @@
-# Using a Corporate Proxy
+# Corporate Proxy
 
-When running Kyverno behind a corporate proxy, you can configure the controllers to proxy communications with external services.
+When running Kyverno behind a corporate proxy, configure the controllers to reach external services through it: the container registries, when verifying images, and the services called by policies.
 
 ```yaml
 proxy:
-  http_proxy: "proxy.kadras.io"
-  https_proxy: "proxy.kadras.io"
-  no_proxy: ".cluster.local., .cluster.local, .svc"
+  http_proxy: http://proxy.example.com:3128
+  https_proxy: http://proxy.example.com:3128
+  no_proxy: .svc,.cluster.local,10.0.0.0/8
 ```
 
-For more information, check the Kyverno documentation for configuring a [proxy](https://kyverno.io/docs/installation/customization/#proxy).
+Include in `no_proxy` the address of the Kubernetes API server and the Pod and Service networks, so that the cluster traffic doesn't go through the proxy. See [proxy](https://kyverno.io/docs/installation/customization/#proxy).

@@ -1,0 +1,5 @@
+# expected: a valid DNS label
+---
+policy_exceptions:
+  enabled: true
+  namespace: "*"

@@ -1,0 +1,25 @@
+# No resource left in the upstream namespace.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kyverno
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: kyverno
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: kyverno
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: kyverno
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: kyverno

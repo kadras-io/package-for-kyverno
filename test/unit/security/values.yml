@@ -1,0 +1,6 @@
+---
+security:
+  network_policies: true
+observability:
+  metrics:
+    enabled: false

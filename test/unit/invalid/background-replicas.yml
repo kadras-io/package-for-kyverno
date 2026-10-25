@@ -1,0 +1,4 @@
+# expected: a value >= 1
+---
+background_controller:
+  replicas: 0

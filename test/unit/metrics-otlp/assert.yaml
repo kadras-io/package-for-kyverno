@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+spec:
+  template:
+    metadata:
+      # The metrics are pushed, not scraped.
+      (annotations == null || annotations."prometheus.io/scrape" == null): true
+    spec:
+      (containers[?name == 'kyverno'] | [0]):
+        (contains(args, '--disableMetrics=false')): true
+        (contains(args, '--otelConfig=grpc')): true
+        (contains(args, '--otelCollector=otel-collector.observability.svc')): true
+        (args[?starts_with(@, '--metricsPort=')]): [--metricsPort=4317]
+        (contains(args, '--transportCreds=otel-ca')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-background-controller
+spec:
+  template:
+    metadata:
+      # The metrics are pushed, not scraped.
+      (annotations == null || annotations."prometheus.io/scrape" == null): true
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--disableMetrics=false')): true
+        (contains(args, '--otelConfig=grpc')): true
+        (contains(args, '--otelCollector=otel-collector.observability.svc')): true
+        (args[?starts_with(@, '--metricsPort=')]): [--metricsPort=4317]
+        (contains(args, '--transportCreds=otel-ca')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-cleanup-controller
+spec:
+  template:
+    metadata:
+      # The metrics are pushed, not scraped.
+      (annotations == null || annotations."prometheus.io/scrape" == null): true
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--disableMetrics=false')): true
+        (contains(args, '--otelConfig=grpc')): true
+        (contains(args, '--otelCollector=otel-collector.observability.svc')): true
+        (args[?starts_with(@, '--metricsPort=')]): [--metricsPort=4317]
+        (contains(args, '--transportCreds=otel-ca')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-reports-controller
+spec:
+  template:
+    metadata:
+      # The metrics are pushed, not scraped.
+      (annotations == null || annotations."prometheus.io/scrape" == null): true
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--disableMetrics=false')): true
+        (contains(args, '--otelConfig=grpc')): true
+        (contains(args, '--otelCollector=otel-collector.observability.svc')): true
+        (args[?starts_with(@, '--metricsPort=')]): [--metricsPort=4317]
+        (contains(args, '--transportCreds=otel-ca')): true
+---
+# Only the webhook port is open, since nothing listens on the metrics port.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kyverno-admission-controller
+spec:
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 9443
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kyverno-reports-controller
+spec:
+  (ingress == null): true

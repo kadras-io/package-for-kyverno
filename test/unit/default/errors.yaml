@@ -1,0 +1,12 @@
+# No PodDisruptionBudgets with a single replica.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+---
+# No additional certificate authorities.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kyverno-ca-certificates

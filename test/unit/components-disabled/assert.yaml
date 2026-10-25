@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'kyverno'] | [0]):
+        # Without the reports controller, nothing would aggregate the admission reports.
+        (contains(args, '--admissionReports=false')): true
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kyverno-admission-controller

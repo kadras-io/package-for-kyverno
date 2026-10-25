@@ -1,48 +1,69 @@
-# Configuring Observability
-
-Monitor and observe the operation of Kyverno using logs, metrics, and traces.
+# Observability
 
 ## Logs
 
-The log verbosity and encoding format for the Kyverno controllers can be configured.
+The log level and format apply to all the Kyverno controllers.
 
 ```yaml
-logging:
-  level: 2
-  encoding: text
+observability:
+  logging:
+    level: info
+    format: json
 ```
 
-For more information, check Kyverno documentation for [logs](https://kyverno.io/docs/installation/customization/#container-flags).
+* `level` is one of `info`, `debug`, `trace`. They map to the verbosity levels 2, 4, and 6 used by Kyverno.
+* `format` is one of `text` and `json`.
 
 ## Metrics
 
-The Kyverno controllers expose Prometheus metrics by default. This package comes pre-configured with the necessary annotations to let Prometheus scrape metrics automatically from the Kyverno controllers.
-
-If you want to export metrics based on the OpenTelemetry format rather than Prometheus, you need to configure the OpenTelemetry endpoint where the controllers will push the metrics using gRPC.
+By default, all the controllers expose metrics in the Prometheus format on port 8000 (`/metrics`). Their Pods are annotated for Prometheus scraping (`prometheus.io/scrape`, `prometheus.io/port`, `prometheus.io/path`). To disable the metrics and remove the annotations:
 
 ```yaml
-metrics:
-  type: grpc
-  collector: 
-    endpoint: opentelemetrycollector.kyverno.svc.cluster.local
-    port: 4317
+observability:
+  metrics:
+    enabled: false
 ```
 
-For more information, check the Kyverno documentation for [metrics](https://kyverno.io/docs/monitoring/).
+If you use the Prometheus Operator, create a PodMonitor instead:
+
+```yaml
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: kyverno
+  podMetricsEndpoints:
+    - targetPort: 8000
+```
+
+Which metrics and labels are exposed is configured via the `kyverno-metrics` ConfigMap: customize it with a ytt overlay (see [configuration.md](configuration.md#ytt-overlays)). See the [metrics reference](https://kyverno.io/docs/reference/metrics/) and the [Grafana dashboard](https://kyverno.io/docs/guides/monitoring/).
+
+### OpenTelemetry
+
+The controllers can push the metrics via OTLP/gRPC to an OpenTelemetry collector in the cluster, instead of exposing them for scraping.
+
+```yaml
+observability:
+  metrics:
+    exporter: otlp
+    endpoint: http://otel-collector.observability.svc:4317
+```
+
+With the `otlp` exporter, the controllers don't listen on port 8000, and their Pods aren't annotated for scraping. To verify the collector with TLS, create a Secret in the package namespace with its CA certificate in the `ca.pem` key, and set its name in `observability.metrics.ca_secret`.
 
 ## Traces
 
-OpenTelemetry instrumentation is provided for Kyverno. By default, the instrumentation is disabled. You can enable the generation of traces and configure how they are exported to an OpenTelemetry-compatible distributed tracing backend.
+The controllers can export traces via OTLP/gRPC to an OpenTelemetry collector in the cluster.
 
 ```yaml
-tracing:
-  enabled: true
-  endpoint: opentelemetrycollector.kyverno.svc.cluster.local
-  port: 4317
+observability:
+  tracing:
+    enabled: true
+    endpoint: http://otel-collector.observability.svc:4317
 ```
 
-For more information, check the Kyverno documentation for [traces](https://kyverno.io/docs/tracing/).
-
-## Dashboards
-
-If you use the Grafana observability stack, you can refer to this [dashboard](https://kyverno.io/docs/guides/monitoring/#grafana-dashboard) as a foundation to build your own.
+To verify the collector with TLS, create a Secret in the package namespace with its CA certificate in the `ca.pem` key, and set its name in `observability.tracing.ca_secret`.

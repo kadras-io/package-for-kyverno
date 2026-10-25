@@ -1,0 +1,4 @@
+---
+proxy:
+  https_proxy: https://proxy.example.com:3128
+  no_proxy: .cluster.local,.svc

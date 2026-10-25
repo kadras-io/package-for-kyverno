@@ -1,0 +1,127 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("/lib/kyverno.star", "component_labels", "component_selector", "enabled_components", "prometheus_metrics_enabled")
+
+#! =============================================
+#! Pod Security Standards
+#! =============================================
+
+#! The controllers comply with the "restricted" Pod Security Standard, enforced on the package namespace.
+#! See: https://kubernetes.io/docs/concepts/security/pod-security-standards/
+
+#@overlay/match by=overlay.subset({"kind":"Namespace"})
+---
+metadata:
+  #@overlay/match missing_ok=True
+  labels:
+    #@overlay/match missing_ok=True
+    pod-security.kubernetes.io/enforce: restricted
+    #@overlay/match missing_ok=True
+    pod-security.kubernetes.io/audit: restricted
+    #@overlay/match missing_ok=True
+    pod-security.kubernetes.io/warn: restricted
+
+#! =============================================
+#! Service Account Tokens
+#! =============================================
+
+#! The ServiceAccounts don't auto-mount their tokens (set upstream), but the Pods opt back in, and all
+#! their containers get the token. Instead, the token is mounted explicitly in each container,
+#! with the same projected volume Kubernetes would otherwise add. All the controllers access the Kubernetes API.
+#! The `apicall-token` volume defined upstream is a separate token, used by policies calling the Kyverno services.
+#! See: https://kyverno.io/policies/other/restrict-automount-sa-token/restrict-automount-sa-token/
+
+#@ kube_api_access = "kube-api-access"
+
+#@ def kube_api_access_mount():
+#@overlay/match missing_ok=True
+volumeMounts:
+#@overlay/append
+- name: #@ kube_api_access
+  mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+  readOnly: true
+#@ end
+
+#@ for component in enabled_components():
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":component.deployment}})
+---
+spec:
+  template:
+    spec:
+      #@overlay/match missing_ok=True
+      automountServiceAccountToken: false
+      #@overlay/match missing_ok=True
+      volumes:
+      #@overlay/append
+      - name: #@ kube_api_access
+        projected:
+          defaultMode: 420
+          sources:
+          - serviceAccountToken:
+              path: token
+              expirationSeconds: 3607
+          - configMap:
+              name: kube-root-ca.crt
+              items:
+              - key: ca.crt
+                path: ca.crt
+          - downwardAPI:
+              items:
+              - path: namespace
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+      containers:
+      #@overlay/match by=overlay.all, expects="1+"
+      - #@ kube_api_access_mount()
+#@ end
+
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":"kyverno-admission-controller"}})
+---
+spec:
+  template:
+    spec:
+      initContainers:
+      #@overlay/match by=overlay.subset({"name":"kyverno-pre"})
+      - #@ kube_api_access_mount()
+
+#! =============================================
+#! Network Policies
+#! =============================================
+
+#! Deny the inbound traffic to the controllers, except for the admission requests to the webhooks
+#! of the admission and cleanup controllers, sent by the Kubernetes API server, and the Prometheus metrics scraping.
+#! The source of both isn't known in advance, so they're allowed from anywhere: restrict them with a ytt overlay.
+#! The traffic from the kubelet, like health probes, is always allowed. The outbound traffic isn't restricted,
+#! since the controllers reach the Kubernetes API server, container registries, and the services called by policies.
+#! The NetworkPolicies are named like the Deployments, which Kyverno excludes from its own processing.
+#! See: https://kyverno.io/docs/guides/security/#network-policies
+
+#@ webhook_components = ["admission_controller", "cleanup_controller"]
+
+#@ if data.values.security.network_policies:
+#@ for component in enabled_components():
+#@ ports = []
+#@ if component.key in webhook_components:
+#@   ports.append({"protocol": "TCP", "port": 9443})
+#@ end
+#@ if prometheus_metrics_enabled():
+#@   ports.append({"protocol": "TCP", "port": 8000})
+#@ end
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: #@ component.deployment
+  namespace: #@ data.values.namespace
+  labels: #@ component_labels(component)
+spec:
+  podSelector:
+    matchLabels: #@ component_selector(component)
+  policyTypes:
+  - Ingress
+  #@ if/end ports:
+  ingress:
+  - ports: #@ ports
+#@ end
+#@ end

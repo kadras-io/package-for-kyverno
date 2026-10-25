@@ -1,0 +1,5 @@
+# expected: one of ["prometheus", "otlp"]
+---
+observability:
+  metrics:
+    exporter: grpc

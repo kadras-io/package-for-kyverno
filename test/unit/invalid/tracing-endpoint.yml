@@ -1,0 +1,6 @@
+# expected: an in-cluster OTLP/gRPC endpoint
+---
+observability:
+  tracing:
+    enabled: true
+    endpoint: https://otel.example.com:4317

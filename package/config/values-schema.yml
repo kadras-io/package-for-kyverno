@@ -1,88 +1,158 @@
+#@ load("/lib/validation.star", "is_dns_label", "is_duration", "is_in_cluster_otlp_endpoint")
+
+#@ def exception_namespace_set(values):
+#@   exceptions = values["policy_exceptions"]
+#@   return not exceptions["enabled"] or exceptions["namespace"] != ""
+#@ end
+
 #@data/values-schema
+#@schema/validation ("`policy_exceptions.namespace` to be set when `policy_exceptions.enabled` is true", exception_namespace_set)
 ---
 
-#@schema/desc "Settings for which Kyverno optional components to deploy."
-optional_components:
-  #@schema/desc "Whether to deploy the Background Controller, responsible for processing of generate and mutate-existing rules."
-  background_controller: true
-  #@schema/desc "Whether to deploy the Cleanup Controller, responsible for processing `CleanupPolicy` resources."
-  cleanup_controller: true
-  #@schema/desc "Whether to deploy the Reports Controller, responsible for handling `PolicyReport` resources."
-  reports_controller: true
+#@schema/desc "The namespace in which to deploy Kyverno."
+#@schema/validation ("a valid DNS label", is_dns_label), min_len=1, max_len=63
+namespace: kyverno
 
-#@schema/desc "PEM-encoded certificate data to trust TLS connections with a custom CA."
+#! =============================================
+#! Components
+#! =============================================
+
+#@schema/desc "Settings for the admission controller, which serves the admission webhooks and validates and mutates resources. It's always deployed."
+admission_controller:
+  #@schema/desc "The number of replicas. All replicas serve admission requests. For high availability, Kyverno requires at least 3, and doesn't support 2. With more than 1 replica, a PodDisruptionBudget is created."
+  #@schema/validation ("at least 1, and not 2", lambda v: v == 1 or v >= 3)
+  replicas: 1
+  #@schema/desc "Container flags, merged on top of the ones computed by the package. Set a flag to null to remove it. See https://kyverno.io/docs/installation/customization/#container-flags."
+  #@schema/examples ("Kubernetes API client rate limits", {"clientRateLimitQPS": 500, "clientRateLimitBurst": 500})
+  #@schema/type any=True
+  args: {}
+
+#@schema/desc "Settings for the background controller, which processes generate and mutate-existing policies."
+background_controller:
+  #@schema/desc "Whether to deploy the background controller."
+  enabled: true
+  #@schema/desc "The number of replicas. Additional replicas are standby via leader election. With more than 1 replica, a PodDisruptionBudget is created."
+  #@schema/validation min=1
+  replicas: 1
+  #@schema/desc "Container flags, merged on top of the ones computed by the package. Set a flag to null to remove it. See https://kyverno.io/docs/installation/customization/#container-flags."
+  #@schema/type any=True
+  args: {}
+
+#@schema/desc "Settings for the cleanup controller, which processes deleting policies and the `cleanup.kyverno.io/ttl` label."
+cleanup_controller:
+  #@schema/desc "Whether to deploy the cleanup controller."
+  enabled: true
+  #@schema/desc "The number of replicas. With more than 1 replica, a PodDisruptionBudget is created."
+  #@schema/validation min=1
+  replicas: 1
+  #@schema/desc "Container flags, merged on top of the ones computed by the package. Set a flag to null to remove it. See https://kyverno.io/docs/installation/customization/#container-flags."
+  #@schema/type any=True
+  args: {}
+
+#@schema/desc "Settings for the reports controller, which produces policy reports from admission requests and background scans."
+reports_controller:
+  #@schema/desc "Whether to deploy the reports controller. When disabled, the admission controller doesn't produce admission reports either."
+  enabled: true
+  #@schema/desc "The number of replicas. Additional replicas are standby via leader election. With more than 1 replica, a PodDisruptionBudget is created."
+  #@schema/validation min=1
+  replicas: 1
+  #@schema/desc "Container flags, merged on top of the ones computed by the package. Set a flag to null to remove it. See https://kyverno.io/docs/installation/customization/#container-flags."
+  #@schema/type any=True
+  args: {}
+
+#! =============================================
+#! Policies
+#! =============================================
+
+#@schema/desc "Settings for policy exceptions, which exempt resources from policies. See https://kyverno.io/docs/exceptions/."
+policy_exceptions:
+  #@schema/desc "Whether to accept policy exceptions."
+  enabled: false
+  #@schema/desc "The only namespace where policy exceptions are accepted. Restrict who can create resources in it, since an exception can disable any policy."
+  #@schema/examples ("Dedicated namespace", "kyverno-exceptions")
+  #@schema/validation ("a valid DNS label", lambda v: v == "" or is_dns_label(v))
+  namespace: ""
+
+#@schema/desc "Settings for the admission webhooks that Kyverno registers with the Kubernetes API server."
+webhooks:
+  #@schema/desc "How long the Kubernetes API server waits for Kyverno to respond to an admission request, in seconds."
+  #@schema/validation min=1, max=30
+  timeout_seconds: 10
+  #@schema/desc "Whether to let requests through when Kyverno doesn't respond, for all policies, instead of their failure policy. It trades policy enforcement for cluster availability."
+  force_failure_policy_ignore: false
+
+#@schema/desc "Settings for policy reports."
+reports:
+  #@schema/desc "How often existing resources are scanned against the policies, as a duration."
+  #@schema/validation ("a duration, like `1h` or `30m`", is_duration)
+  background_scan_interval: 1h
+
+#@schema/desc "Settings merged into the `kyverno` ConfigMap, with structured values encoded as JSON. See https://kyverno.io/docs/installation/customization/#configmap-keys."
+#@schema/examples ("Exclude requests from a group", {"excludeGroups": "system:nodes,system:serviceaccounts:kube-system"})
+#@schema/type any=True
+config: {}
+
+#! =============================================
+#! Trust
+#! =============================================
+
+#@schema/desc "PEM-encoded certificates of additional certificate authorities to trust, for example to reach a private container registry. The system ones are still trusted."
 ca_cert_data: ""
 
-#@schema/desc "Settings for the Admission Controller component."
-admission_controller:
-  #@schema/desc "The number of replicas for the Admission Controller. In order to enable high availability, it should be at least 3 (2 is not permitted)."
-  #@schema/validation min=1
-  replicas: 1
+#! =============================================
+#! Observability
+#! =============================================
 
-#@schema/desc "Settings for the Background Controller component."
-background_controller:
-  #@schema/desc "The number of replicas for the Background Controller. In order to enable high availability, it should be greater than 1."
-  #@schema/validation min=1
-  replicas: 1
-
-#@schema/desc "Settings for the Cleanup Controller component."
-cleanup_controller:
-  #@schema/desc "The number of replicas for the Cleanup Controller. In order to enable high availability, it should be greater than 1."
-  #@schema/validation min=1
-  replicas: 1
-
-#@schema/desc "Settings for the Reports Controller component."
-reports_controller:
-  #@schema/desc "The number of replicas for the Reports Controller. In order to enable high availability, it should be greater than 1."
-  #@schema/validation min=1
-  replicas: 1
-
-#@schema/desc "Settings for logging."
-logging:
-  #@schema/desc "Number of the log level verbosity (from `1` to `6`)."
-  #@schema/validation min=1,max=6
-  level: 2
-  #@schema/desc "Log encoding format. Options: `text`, `json`."
-  #@schema/validation one_of=["text", "json"]
-  encoding: text
-
-#@schema/desc "Settings for metrics via Prometheus or OpenTelemetry."
-metrics:
-  #@schema/desc "Whether to use OpenTelemetry (`grpc`) or Prometheus (`prometheus`) for exporting metrics."
-  #@schema/validation one_of=["grpc", "prometheus"]
-  type: prometheus
-  #@schema/desc "Whether to add Prometheus scrape annotations to Kyverno's metrics Services when Prometheus is chosen as the metrics format."
-  annotations: true
-  #@schema/desc "Settings for the OpenTelemetry-based collector when OpenTelemetry/gRPC is chosen as the metrics format."
-  collector:
-    #@schema/desc "The service endpoint where the OpenTelemetry-based collector receives telemetry data."
-    #@schema/example ("The service endpoint of the OpenTelemetry-based collector", "opentelemetrycollector.kyverno.svc.cluster.local")
-    #@schema/validation min_len=1, when=lambda _, ctx: ctx.root["metrics"]["type"] == "grpc"
+#@schema/desc "Settings for logs, metrics, and traces."
+observability:
+  logging:
+    #@schema/desc "The log level of the controllers."
+    #@schema/validation one_of=["info", "debug", "trace"]
+    level: info
+    #@schema/desc "The format of the logs."
+    #@schema/validation one_of=["text", "json"]
+    format: text
+  metrics:
+    #@schema/desc "Whether to produce metrics."
+    enabled: true
+    #@schema/desc "How the metrics are exported. With `prometheus`, the controllers expose them on port 8000, and their Pods are annotated for scraping. With `otlp`, they push them via OTLP/gRPC to `endpoint`."
+    #@schema/validation one_of=["prometheus", "otlp"]
+    exporter: prometheus
+    #@schema/desc "The OTLP/gRPC endpoint of an in-cluster OpenTelemetry collector, in the form `[http://]<service>.<namespace>[.svc[.cluster.local]]:<port>`. Required with the `otlp` exporter."
+    #@schema/examples ("OpenTelemetry collector", "http://otel-collector.observability.svc:4317")
+    #@schema/validation ("an in-cluster OTLP/gRPC endpoint like `http://<service>.<namespace>.svc:4317`", is_in_cluster_otlp_endpoint), when=lambda _, ctx: ctx.parent["enabled"] and ctx.parent["exporter"] == "otlp"
     endpoint: ""
-    #@schema/desc "The port exposed by the OpenTelemetry-based collector to accept telemetry data."
-    #@schema/validation min=1, max=65535, when=lambda _, ctx: ctx.root["metrics"]["type"] == "grpc"
-    port: 4317
+    #@schema/desc "The name of a Secret in the package namespace with the CA certificate (`ca.pem`) to verify the collector, with the `otlp` exporter. If empty, the connection is insecure."
+    ca_secret: ""
+  tracing:
+    #@schema/desc "Whether to export traces via OTLP/gRPC."
+    enabled: false
+    #@schema/desc "The OTLP/gRPC endpoint of an in-cluster OpenTelemetry collector, in the form `[http://]<service>.<namespace>[.svc[.cluster.local]]:<port>`."
+    #@schema/examples ("OpenTelemetry collector", "http://otel-collector.observability.svc:4317")
+    #@schema/validation ("an in-cluster OTLP/gRPC endpoint like `http://<service>.<namespace>.svc:4317`", is_in_cluster_otlp_endpoint), when=lambda _, ctx: ctx.parent["enabled"]
+    endpoint: ""
+    #@schema/desc "The name of a Secret in the package namespace with the CA certificate (`ca.pem`) to verify the collector. If empty, the connection is insecure."
+    ca_secret: ""
 
-#@schema/desc "Settings for tracing via OpenTelemetry."
-tracing:
-  #@schema/desc "Whether to configure Kyverno to export OpenTelemetry traces to a distributed tracing backend."
-  enabled: false
-  #@schema/desc "The endpoint where the distributed tracing backend accepts OpenTelemetry traces."
-  #@schema/example ("The service endpoint of the OpenTelemetry Collector", "opentelemetrycollector.kyverno.svc.cluster.local")
-  #@schema/validation min_len=2, when=lambda _, ctx: ctx.parent["enabled"]
-  endpoint: ""
-  #@schema/desc "The port exposed by the distributed tracing backend to accept OpenTelemetry traces."
-  #@schema/validation min=80, when=lambda _, ctx: ctx.parent["enabled"]
-  port: 4317
-  #@schema/desc "The Secret containing the certificate which is used by the Opentelemetry Tracing Client. If empty string is set, an insecure connection will be used."
-  ca_cert_secret: ""
+#! =============================================
+#! Security
+#! =============================================
 
-#@schema/desc "Settings for the corporate proxy."
+#@schema/desc "Settings for security."
+security:
+  #@schema/desc "Whether to restrict the inbound traffic to the controllers via NetworkPolicies, allowing only the admission requests and the metrics scraping."
+  network_policies: false
+
+#! =============================================
+#! Proxy
+#! =============================================
+
+#@schema/desc "Settings for the corporate proxy, used to reach container registries and external services."
 proxy:
-  #@schema/desc "The HTTPS proxy to use for network traffic."
-  https_proxy: ""
   #@schema/desc "The HTTP proxy to use for network traffic."
   http_proxy: ""
+  #@schema/desc "The HTTPS proxy to use for network traffic."
+  https_proxy: ""
   #@schema/desc "A comma-separated list of hostnames, IP addresses, or IP ranges in CIDR format that should not use the proxy."
-  #@schema/example ("Allow Kyverno controllers to talk to each other", ".cluster.local.,.cluster.local,.svc")
+  #@schema/examples ("Bypass the proxy for in-cluster traffic", ".cluster.local,.svc,10.0.0.0/8")
   no_proxy: ""

@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: policies
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+  namespace: policies
+spec:
+  template:
+    spec:
+      (containers[?name == 'kyverno'] | [0]):
+        (contains(args, '--caSecretName=kyverno-svc.policies.svc.kyverno-tls-ca')): true
+        (contains(args, '--tlsSecretName=kyverno-svc.policies.svc.kyverno-tls-pair')): true
+        (contains(args, '--backgroundServiceAccountName=system:serviceaccount:policies:kyverno-background-controller')): true
+        (contains(args, '--reportsServiceAccountName=system:serviceaccount:policies:kyverno-reports-controller')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-cleanup-controller
+  namespace: policies
+spec:
+  template:
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--caSecretName=kyverno-cleanup-controller.policies.svc.kyverno-tls-ca')): true
+        (contains(args, '--tlsSecretName=kyverno-cleanup-controller.policies.svc.kyverno-tls-pair')): true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kyverno
+  namespace: policies
+data:
+  (contains(resourceFilters, '[*/*,policies,*]')): true
+  (contains(resourceFilters, '[Deployment,policies,kyverno-admission-controller]')): true
+  (contains(resourceFilters, '[Secret,policies,kyverno-svc.policies.svc.*]')): true
+  (contains(resourceFilters, ',kyverno,')): false
+  (parse_json(webhooks)):
+    namespaceSelector:
+      matchExpressions:
+      - values: [kube-system]
+      - values: [policies]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kyverno:admission-controller
+subjects:
+- kind: ServiceAccount
+  name: kyverno-admission-controller
+  namespace: policies
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kyverno:admission-controller
+  namespace: policies
+subjects:
+- kind: ServiceAccount
+  namespace: policies
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: canonical-registry-credentials
+  namespace: policies

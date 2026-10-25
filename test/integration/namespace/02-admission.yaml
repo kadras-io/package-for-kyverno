@@ -1,0 +1,19 @@
+# The policy takes effect once Kyverno has registered it, so the request is retried until it is denied.
+apiVersion: kuttl.dev/v1beta1
+kind: TestStep
+commands:
+  - script: |
+      for attempt in $(seq 1 30); do
+        if output=$(kubectl run unlabeled --image=nginx --dry-run=server -o name 2>&1); then
+          sleep 3
+        elif echo "$output" | grep -q "Pods must have the team label"; then
+          echo "Denied: $output"
+          exit 0
+        else
+          echo "$output"
+          sleep 3
+        fi
+      done
+      echo "The Pod was not denied by the policy"
+      exit 1
+  - script: kubectl run labeled --image=nginx --labels=team=platform --dry-run=server -o name

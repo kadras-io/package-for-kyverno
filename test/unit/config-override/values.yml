@@ -1,0 +1,22 @@
+---
+admission_controller:
+  args:
+    clientRateLimitQPS: 500
+    --clientRateLimitBurst: 500
+    # A computed flag can be overridden.
+    webhookTimeout: 20
+    # An upstream flag can be removed.
+    generateValidatingAdmissionPolicy: null
+reports_controller:
+  args:
+    backgroundScanWorkers: 4
+webhooks:
+  timeout_seconds: 15
+  force_failure_policy_ignore: true
+reports:
+  background_scan_interval: 30m
+config:
+  generateSuccessEvents: true
+  excludeUsernames: "!system:kube-scheduler"
+  webhookLabels:
+    team: platform

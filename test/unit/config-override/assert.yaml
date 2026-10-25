@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'kyverno'] | [0]):
+        (contains(args, '--clientRateLimitQPS=500')): true
+        (contains(args, '--clientRateLimitBurst=500')): true
+        (contains(args, '--forceFailurePolicyIgnore=true')): true
+        (args[?starts_with(@, '--webhookTimeout=')]): [--webhookTimeout=20]
+        (args[?starts_with(@, '--generateValidatingAdmissionPolicy')] | length(@)): 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-reports-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (args[?starts_with(@, '--backgroundScanWorkers=')]): [--backgroundScanWorkers=4]
+        (contains(args, '--backgroundScanInterval=30m')): true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kyverno
+  namespace: kyverno
+data:
+  generateSuccessEvents: "true"
+  excludeUsernames: "!system:kube-scheduler"
+  webhookLabels: '{"team":"platform"}'
+  # The upstream keys are kept.
+  defaultRegistry: docker.io

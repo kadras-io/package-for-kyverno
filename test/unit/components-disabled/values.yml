@@ -1,0 +1,10 @@
+---
+background_controller:
+  enabled: false
+  replicas: 2
+cleanup_controller:
+  enabled: false
+reports_controller:
+  enabled: false
+security:
+  network_policies: true

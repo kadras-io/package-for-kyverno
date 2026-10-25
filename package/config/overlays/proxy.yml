@@ -1,0 +1,26 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("/lib/kyverno.star", "enabled_components")
+
+#! The controllers reach container registries, to verify images, and the external services called by policies.
+#! See: https://kyverno.io/docs/installation/customization/#proxy
+
+#@ proxy = data.values.proxy
+#@ env = [{"name": name, "value": value} for name, value in [("HTTP_PROXY", proxy.http_proxy), ("HTTPS_PROXY", proxy.https_proxy), ("NO_PROXY", proxy.no_proxy)] if value]
+
+#@ if env:
+#@ for component in enabled_components():
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":component.deployment}})
+---
+spec:
+  template:
+    spec:
+      containers:
+        #@overlay/match by="name"
+        - name: #@ component.container
+          env:
+          #@ for var in env:
+          - #@ var
+          #@ end
+#@ end
+#@ end

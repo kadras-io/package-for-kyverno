@@ -1,0 +1,5 @@
+# expected: an in-cluster OTLP/gRPC endpoint
+---
+observability:
+  metrics:
+    exporter: otlp

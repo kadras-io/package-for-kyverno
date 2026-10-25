@@ -1,0 +1,4 @@
+# expected: at least 1, and not 2
+---
+admission_controller:
+  replicas: 2

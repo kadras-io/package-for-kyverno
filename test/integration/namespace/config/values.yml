@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kyverno-values
+  namespace: tests
+stringData:
+  values.yaml: |
+    namespace: policies
+    admission_controller:
+      replicas: 3
+    background_controller:
+      replicas: 2
+    observability:
+      logging:
+        format: json
+    security:
+      network_policies: true

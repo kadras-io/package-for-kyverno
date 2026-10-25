@@ -1,0 +1,14 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("/lib/kyverno.star", "components", "is_enabled")
+
+#! The admission controller is always deployed. The other controllers can be disabled,
+#! removing all their resources: Deployment, Services, ServiceAccount, and RBAC.
+#! See: https://kyverno.io/docs/installation/installation/
+
+#@ for component in components():
+#@ if not is_enabled(component):
+#@overlay/match by=overlay.subset({"metadata":{"labels":{"app.kubernetes.io/component":component.component}}}), expects="1+"
+#@overlay/remove
+---
+#@ end
+#@ end

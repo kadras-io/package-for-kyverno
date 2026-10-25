@@ -1,0 +1,11 @@
+---
+observability:
+  logging:
+    level: debug
+    format: json
+  metrics:
+    enabled: false
+  tracing:
+    enabled: true
+    endpoint: http://otel-collector.observability.svc:4317
+    ca_secret: otel-ca

@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kyverno
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+  namespace: kyverno
+  annotations:
+    kapp.k14s.io/change-rule.webhook-owner: delete before deleting kyverno.packages.kadras.io/webhook-owner
+spec:
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+    spec:
+      priorityClassName: system-cluster-critical
+      automountServiceAccountToken: false
+      imagePullSecrets:
+      - name: canonical-registry-credentials
+      (volumes[?name == 'kube-api-access'] | length(@)): 1
+      (initContainers[?name == 'kyverno-pre'] | [0]):
+        args:
+        - --loggingFormat=text
+        - --v=2
+        - --openreportsEnabled=false
+        (volumeMounts[?name == 'kube-api-access'] | length(@)): 1
+      (containers[?name == 'kyverno'] | [0]):
+        (contains(args, '--caSecretName=kyverno-svc.kyverno.svc.kyverno-tls-ca')): true
+        (contains(args, '--backgroundServiceAccountName=system:serviceaccount:kyverno:kyverno-background-controller')): true
+        (contains(args, '--loggingFormat=text')): true
+        (contains(args, '--v=2')): true
+        (contains(args, '--disableMetrics=false')): true
+        (contains(args, '--otelConfig=prometheus')): true
+        (args[?starts_with(@, '--otelCollector')] | length(@)): 0
+        (contains(args, '--enablePolicyException=false')): true
+        (contains(args, '--webhookTimeout=10')): true
+        (contains(args, '--forceFailurePolicyIgnore=false')): true
+        (contains(args, '--admissionReports=true')): true
+        (args[?starts_with(@, '--imagePullSecrets=')]): [--imagePullSecrets=canonical-registry-credentials]
+        (args[?starts_with(@, '--enableTracing')] | length(@)): 0
+        (args[?starts_with(@, '--exceptionNamespace')] | length(@)): 0
+        (volumeMounts[?name == 'kube-api-access'] | length(@)): 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-background-controller
+  namespace: kyverno
+spec:
+  replicas: 1
+  template:
+    spec:
+      automountServiceAccountToken: false
+      (priorityClassName == null): true
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--enablePolicyException=false')): true
+        (contains(args, '--imagePullSecrets=canonical-registry-credentials')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-cleanup-controller
+  namespace: kyverno
+spec:
+  replicas: 1
+  template:
+    spec:
+      automountServiceAccountToken: false
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--caSecretName=kyverno-cleanup-controller.kyverno.svc.kyverno-tls-ca')): true
+        # The cleanup controller doesn't support the policy exceptions and registry flags.
+        (args[?starts_with(@, '--enablePolicyException')] | length(@)): 0
+        (args[?starts_with(@, '--imagePullSecrets')] | length(@)): 0
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-reports-controller
+  namespace: kyverno
+spec:
+  replicas: 1
+  template:
+    spec:
+      automountServiceAccountToken: false
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--backgroundScanInterval=1h')): true
+        (contains(args, '--imagePullSecrets=canonical-registry-credentials')): true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kyverno
+  namespace: kyverno
+data:
+  (contains(resourceFilters, '[*/*,kyverno,*]')): true
+  (parse_json(webhooks)):
+    namespaceSelector:
+      matchExpressions:
+      - values: [kube-system]
+      - values: [kyverno]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno:webhook
+  labels:
+    app.kubernetes.io/component: kyverno
+  annotations:
+    kapp.k14s.io/change-group: kyverno.packages.kadras.io/webhook-owner
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: canonical-registry-credentials
+  namespace: kyverno

@@ -1,8 +1,6 @@
-# Configuring High Availability
+# High Availability
 
-High availability for the Kyverno controllers can be achieved when more than 1 replica is configured. Admission Controller and Cleanup Controller use a combination of stateless replication and leader election strategy based on the active/passive model. Background Controller and Reports Controller rely fully on a leader election strategy based on the active/passive model.
-
-When more than 1 replica is configured (more than 2 for the Admission Controller), a `PodDisruptionBudget` is automatically created to prevent downtime during node unavailability.
+By default, the package runs 1 replica of each Kyverno controller. For production, the [Kyverno documentation](https://kyverno.io/docs/guides/high-availability/) recommends 3 replicas of the admission controller and 2 of the others.
 
 ```yaml
 admission_controller:
@@ -15,4 +13,20 @@ reports_controller:
   replicas: 2
 ```
 
-For more information, check the Kyverno documentation for [high availability](https://kyverno.io/docs/high-availability/).
+* The **admission controller** follows an active/active model: all replicas serve the admission requests from the Kubernetes API server. More replicas improve both availability and throughput. Kyverno requires at least 3 replicas for high availability and doesn't support 2, so the package rejects that value.
+* The **background controller** and the **reports controller** follow an active/passive model: one replica is elected leader and does the work, the others are hot standby. More replicas improve availability, not throughput.
+* The **cleanup controller** replicas all serve its webhook, and one is elected leader to run the cleanup.
+
+The replicas are spread across nodes via pod anti-affinity rules defined upstream, on a best-effort basis. Single-node clusters keep working.
+
+## Disruptions
+
+With more than one replica, a PodDisruptionBudget keeps at least one replica of the controller available during voluntary disruptions, like node drains.
+
+## Priority
+
+The admission controller runs with the `system-cluster-critical` [priority class](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/). Some clusters only allow this priority class in the `kube-system` namespace. In that case, create a ResourceQuota in the package namespace that allows it.
+
+## Resources
+
+Tune the resources with a ytt overlay, as described in [configuration.md](configuration.md#resources).

@@ -1,0 +1,44 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("/lib/kyverno.star", "component_labels", "component_selector", "component_values", "enabled_components")
+
+#! All the admission controller replicas serve the admission requests from the Kubernetes API server.
+#! The background and reports controllers are active/passive: one replica is elected leader, the others are hot standby.
+#! The cleanup controller replicas all serve its webhook, and elect a leader for the cleanup work.
+#! The replicas are already spread across nodes via pod anti-affinity rules defined upstream.
+#!
+#! With more than one replica, a PodDisruptionBudget keeps at least one available during voluntary disruptions.
+#! It's named like the Deployment, which Kyverno excludes from its own processing (see the `resourceFilters`).
+#!
+#! The admission controller runs with the `system-cluster-critical` priority, since its webhooks are on the path
+#! of the requests to the Kubernetes API server.
+#! See: https://kyverno.io/docs/guides/high-availability/
+
+#@ for component in enabled_components():
+#@ replicas = component_values(component).replicas
+
+#@overlay/match by=overlay.subset({"kind":"Deployment", "metadata":{"name":component.deployment}})
+---
+spec:
+  replicas: #@ replicas
+  #@ if/end component.key == "admission_controller":
+  template:
+    spec:
+      #@overlay/match missing_ok=True
+      priorityClassName: system-cluster-critical
+
+#@ if replicas > 1:
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: #@ component.deployment
+  namespace: #@ data.values.namespace
+  labels: #@ component_labels(component)
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels: #@ component_selector(component)
+#@ end
+
+#@ end

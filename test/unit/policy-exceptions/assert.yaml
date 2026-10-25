@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-admission-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'kyverno'] | [0]):
+        (contains(args, '--enablePolicyException=true')): true
+        (contains(args, '--exceptionNamespace=kyverno-exceptions')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-background-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--enablePolicyException=true')): true
+        (contains(args, '--exceptionNamespace=kyverno-exceptions')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-reports-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (contains(args, '--enablePolicyException=true')): true
+        (contains(args, '--exceptionNamespace=kyverno-exceptions')): true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyverno-cleanup-controller
+spec:
+  template:
+    spec:
+      (containers[?name == 'controller'] | [0]):
+        (args[?starts_with(@, '--exceptionNamespace')] | length(@)): 0

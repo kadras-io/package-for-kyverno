@@ -1,0 +1,43 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:json", "json")
+#@ load("@ytt:overlay", "overlay")
+
+#! Kyverno runs in the package namespace. The controllers read it from the Pod metadata,
+#! but the upstream manifest references it in the resource filters, the webhook namespace selector,
+#! and some flags (see lib/kyverno.star).
+
+#@ namespace = data.values.namespace
+
+#@overlay/match by=overlay.subset({"kind":"Namespace", "metadata":{"name":"kyverno"}})
+---
+metadata:
+  name: #@ namespace
+
+#@overlay/match by=overlay.subset({"metadata":{"namespace":"kyverno"}}), expects="1+"
+---
+metadata:
+  namespace: #@ namespace
+
+#@ cluster_role_binding = overlay.subset({"kind":"ClusterRoleBinding"})
+#@ role_binding = overlay.subset({"kind":"RoleBinding"})
+
+#@overlay/match by=overlay.or_op(cluster_role_binding, role_binding), expects="1+"
+---
+subjects:
+#@overlay/match by=overlay.subset({"kind":"ServiceAccount"})
+- namespace: #@ namespace
+
+#! Kyverno doesn't process the requests for its own resources, nor for the ones in its namespace and in kube-system.
+#! See: https://kyverno.io/docs/installation/customization/#resource-filters
+#@ def resource_filters(left, _):
+#@   return left.replace(",kyverno,", "," + namespace + ",").replace(".kyverno.svc.", "." + namespace + ".svc.")
+#@ end
+
+#@ webhooks = {"namespaceSelector": {"matchExpressions": [{"key": "kubernetes.io/metadata.name", "operator": "NotIn", "values": ["kube-system"]}, {"key": "kubernetes.io/metadata.name", "operator": "NotIn", "values": [namespace]}], "matchLabels": None}}
+
+#@overlay/match by=overlay.subset({"kind":"ConfigMap", "metadata":{"name":"kyverno"}})
+---
+data:
+  #@overlay/replace via=resource_filters
+  resourceFilters:
+  webhooks: #@ json.encode(webhooks)

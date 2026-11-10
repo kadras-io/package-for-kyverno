@@ -184,7 +184,7 @@ The Kyverno package has the following configurable properties.
 | `config` | `{}` | Settings merged into the `kyverno` ConfigMap, with structured values encoded as JSON. See https://kyverno.io/docs/installation/customization/#configmap-keys. |
 | `ca_cert_data` | `""` | PEM-encoded certificates of additional certificate authorities to trust, for example to reach a private container registry. The system ones are still trusted. |
 | `observability.logging.level` | `"info"` | The log level of the controllers. |
-| `observability.logging.format` | `"text"` | The format of the logs. |
+| `observability.logging.format` | `"json"` | The format of the logs. |
 | `observability.metrics.enabled` | `true` | Whether to produce metrics. |
 | `observability.metrics.exporter` | `"prometheus"` | How the metrics are exported. With `prometheus`, the controllers expose them on port 8000, and their Pods are annotated for scraping. With `otlp`, they push them via OTLP/gRPC to `endpoint`. |
 | `observability.metrics.endpoint` | `""` | The OTLP/gRPC endpoint of an in-cluster OpenTelemetry collector, in the form `[http://]<service>.<namespace>[.svc[.cluster.local]]:<port>`. Required with the `otlp` exporter. |

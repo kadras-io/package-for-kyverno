@@ -8,7 +8,7 @@ spec:
       (annotations == null || annotations."prometheus.io/scrape" == null): true
     spec:
       (containers[?name == 'kyverno'] | [0]):
-        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--loggingFormat=text')): true
         (contains(args, '--v=4')): true
         (contains(args, '--disableMetrics=true')): true
         (contains(args, '--enableTracing=true')): true
@@ -26,7 +26,7 @@ spec:
       (annotations == null || annotations."prometheus.io/scrape" == null): true
     spec:
       (containers[?name == 'controller'] | [0]):
-        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--loggingFormat=text')): true
         (contains(args, '--v=4')): true
         (contains(args, '--disableMetrics=true')): true
         (contains(args, '--enableTracing=true')): true
@@ -44,7 +44,7 @@ spec:
       (annotations == null || annotations."prometheus.io/scrape" == null): true
     spec:
       (containers[?name == 'controller'] | [0]):
-        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--loggingFormat=text')): true
         (contains(args, '--v=4')): true
         (contains(args, '--disableMetrics=true')): true
         (contains(args, '--enableTracing=true')): true
@@ -62,7 +62,7 @@ spec:
       (annotations == null || annotations."prometheus.io/scrape" == null): true
     spec:
       (containers[?name == 'controller'] | [0]):
-        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--loggingFormat=text')): true
         (contains(args, '--v=4')): true
         (contains(args, '--disableMetrics=true')): true
         (contains(args, '--enableTracing=true')): true
@@ -78,5 +78,5 @@ spec:
   template:
     spec:
       (initContainers[?name == 'kyverno-pre'] | [0]):
-        (contains(args, '--loggingFormat=json')): true
+        (contains(args, '--loggingFormat=text')): true
         (contains(args, '--v=4')): true

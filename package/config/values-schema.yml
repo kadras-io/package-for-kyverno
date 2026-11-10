@@ -111,7 +111,7 @@ observability:
     level: info
     #@schema/desc "The format of the logs."
     #@schema/validation one_of=["text", "json"]
-    format: text
+    format: json
   metrics:
     #@schema/desc "Whether to produce metrics."
     enabled: true

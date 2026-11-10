@@ -2,7 +2,7 @@
 observability:
   logging:
     level: debug
-    format: json
+    format: text
   metrics:
     enabled: false
   tracing:

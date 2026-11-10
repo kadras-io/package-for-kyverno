@@ -27,14 +27,14 @@ spec:
       (volumes[?name == 'kube-api-access'] | length(@)): 1
       (initContainers[?name == 'kyverno-pre'] | [0]):
         args:
-        - --loggingFormat=text
+        - --loggingFormat=json
         - --v=2
         - --openreportsEnabled=false
         (volumeMounts[?name == 'kube-api-access'] | length(@)): 1
       (containers[?name == 'kyverno'] | [0]):
         (contains(args, '--caSecretName=kyverno-svc.kyverno.svc.kyverno-tls-ca')): true
         (contains(args, '--backgroundServiceAccountName=system:serviceaccount:kyverno:kyverno-background-controller')): true
-        (contains(args, '--loggingFormat=text')): true
+        (contains(args, '--loggingFormat=json')): true
         (contains(args, '--v=2')): true
         (contains(args, '--disableMetrics=false')): true
         (contains(args, '--otelConfig=prometheus')): true
